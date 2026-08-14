@@ -1,0 +1,95 @@
+// Base local en un archivo. Sin servidor, sin Docker.
+// Migrar con: npx prisma migrate dev
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Un concurso de un juego. Las jugadas del usuario NO viven acá:
+/// quedan en el navegador (IndexedDB). Esto es sólo el espejo de los sorteos.
+model Sorteo {
+  id           String   @id @default(cuid())
+  juegoCodigo  String
+  nroConcurso  Int
+  fecha        DateTime
+
+  /// PENDIENTE  - todavía no sorteado o sin datos
+  /// PARCIAL    - hay números pero falta info de premios
+  /// CONFIRMADO - dos fuentes coinciden
+  /// DISCREPANCIA - las fuentes no coinciden, NO se publica
+  estado       String   @default("PENDIENTE")
+
+  verificadoEn DateTime?
+  urlExtracto  String?
+
+  resultados   ResultadoModalidad[]
+  lecturas     LecturaFuente[]
+
+  creadoEn     DateTime @default(now())
+  editadoEn    DateTime @updatedAt
+
+  @@unique([juegoCodigo, nroConcurso])
+  @@index([juegoCodigo, fecha])
+}
+
+model ResultadoModalidad {
+  id              String   @id @default(cuid())
+  sorteo          Sorteo   @relation(fields: [sorteoId], references: [id], onDelete: Cascade)
+  sorteoId        String
+
+  modalidadCodigo String
+  /// Array de enteros serializado. SQLite no tiene tipo array.
+  numerosJson     String
+  /// Número Plus del sorteo, sólo para juegos que lo tienen.
+  plus            Int?
+  /// Sólo para modalidades MAS_ACIERTOS. null = todavía no se sabe.
+  nivelGanador    Int?
+
+  escalones       Escalon[]
+
+  @@unique([sorteoId, modalidadCodigo])
+}
+
+/// Un renglón de la tabla de premios del extracto.
+model Escalon {
+  id             String             @id @default(cuid())
+  resultado      ResultadoModalidad @relation(fields: [resultadoId], references: [id], onDelete: Cascade)
+  resultadoId    String
+
+  /// Cuántos aciertos paga este renglón. null para el Estímulo cuando no aplica.
+  aciertos       Int?
+  etiqueta       String
+  pozo           Float
+  ganadores      Int
+  premioUnitario Float
+  vacante        Boolean            @default(false)
+
+  @@index([resultadoId])
+}
+
+/// Cada vez que una fuente devuelve datos guardamos la lectura cruda.
+/// Es lo que permite conciliar y auditar cuando algo no cierra.
+model LecturaFuente {
+  id          String   @id @default(cuid())
+  sorteo      Sorteo?  @relation(fields: [sorteoId], references: [id], onDelete: Cascade)
+  sorteoId    String?
+
+  juegoCodigo String
+  nroConcurso Int
+  /// SANTAFE_WEB | EXTRACTO_PDF | TUJUGADA
+  fuente      String
+  /// Hash del contenido normalizado. Si dos fuentes dan el mismo hash, coinciden.
+  huella      String
+  payloadJson String
+  ok          Boolean  @default(true)
+  error       String?
+
+  leidoEn     DateTime @default(now())
+
+  @@index([juegoCodigo, nroConcurso])
+}

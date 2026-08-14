@@ -1,0 +1,29 @@
+{
+  "name": "poceados-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.6"
+  },
+  "scripts": {
+    "dev": "node --watch --experimental-strip-types src/servidor.ts",
+    "test": "node --test --experimental-strip-types",
+    "db:migrar": "prisma migrate dev",
+    "db:ver": "prisma studio",
+    "ingesta": "node --experimental-strip-types src/ingesta/correr.ts",
+    "test:watch": "node --test --watch --experimental-strip-types"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.1",
+    "@prisma/client": "^6.1.0",
+    "cheerio": "^1.0.0",
+    "fastify": "^5.2.0",
+    "pino-pretty": "^13.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.1.0",
+    "typescript": "^5.7.2",
+    "@types/node": "^22.10.2"
+  }
+}
