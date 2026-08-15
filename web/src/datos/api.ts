@@ -9,7 +9,9 @@ import type { Sorteo } from '@dominio/dominio/control.ts';
 import type { Juego } from '@dominio/config/juegos.ts';
 import { almacen } from './almacen.ts';
 
-const API = '/api';
+// En dev, '/api' pasa por el proxy de vite.config.ts. En producción no hay
+// proxy: hace falta la URL completa del backend desplegado.
+const API = (import.meta.env.VITE_API_URL ?? '/api').replace(/\/$/, '');
 
 async function traer<T>(ruta: string, claveCache: string): Promise<{ dato: T; deCache: boolean }> {
   try {
