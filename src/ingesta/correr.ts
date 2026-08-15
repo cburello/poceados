@@ -9,11 +9,12 @@
 
 import { PrismaClient } from '@prisma/client';
 import { proveedorSantaFe } from '../proveedores/santafe.ts';
+import { proveedorLotba } from '../proveedores/lotba.ts';
 import { conciliar } from './conciliar.ts';
 import { huellaDe } from '../proveedores/tipos.ts';
 
 const prisma = new PrismaClient();
-const PROVEEDORES = [proveedorSantaFe];
+const PROVEEDORES = [proveedorSantaFe, proveedorLotba];
 
 async function ingestar(juegoCodigo: string) {
   process.stdout.write(`\n${juegoCodigo}: consultando fuentes...\n`);
@@ -94,7 +95,7 @@ async function ingestar(juegoCodigo: string) {
   console.log(`  guardado: concurso ${s.nroConcurso} del ${s.fecha}`);
 }
 
-for (const juego of ['QUINI6']) {
+for (const juego of ['QUINI6', 'LOTO_PLUS']) {
   try {
     await ingestar(juego);
   } catch (e) {

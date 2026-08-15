@@ -6,7 +6,7 @@
  * cambia el maquetado, se toca un solo archivo y no se cae nada más.
  */
 
-export type CodigoFuente = 'SANTAFE_WEB' | 'EXTRACTO_PDF' | 'TUJUGADA';
+export type CodigoFuente = 'SANTAFE_WEB' | 'LOTBA_WEB' | 'EXTRACTO_PDF' | 'TUJUGADA';
 
 export interface EscalonCrudo {
   aciertos: number | null;

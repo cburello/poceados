@@ -99,7 +99,10 @@ export const JUEGOS: Record<string, Juego> = {
     ],
   },
 
-  // PENDIENTE DE VERIFICAR contra reglamento oficial de LOTBA.
+  // Verificado contra el sitio oficial de LOTBA (loto.loteriadelaciudad.gob.ar).
+  // OJO con la diferencia respecto de Quini 6: acá las cuatro modalidades vienen
+  // incluidas en el mismo ticket ("un solo precio, cuatro chances"). El usuario
+  // no elige cuáles paga, participa en todas.
   LOTO_PLUS: {
     codigo: 'LOTO_PLUS',
     nombre: 'Loto Plus',
@@ -108,7 +111,7 @@ export const JUEGOS: Record<string, Juego> = {
     cantidadNumeros: 6,
     diasSorteo: [3, 6],
     horaSorteo: '22:00',
-    verificado: false,
+    verificado: true,
     plus: {
       min: 0,
       max: 9,
@@ -117,9 +120,9 @@ export const JUEGOS: Record<string, Juego> = {
     },
     modalidades: [
       { codigo: 'TRADICIONAL', nombre: 'Tradicional', orden: 1, tipo: 'ESCALONADA', aciertosQuePagan: [6, 5, 4], opcional: false },
-      { codigo: 'MATCH', nombre: 'Match', orden: 2, tipo: 'ESCALONADA', aciertosQuePagan: [6, 5, 4], opcional: true },
-      { codigo: 'DESQUITE', nombre: 'Desquite', orden: 3, tipo: 'ESCALONADA', aciertosQuePagan: [6], opcional: true },
-      { codigo: 'SALE_O_SALE', nombre: 'Sale o Sale', orden: 4, tipo: 'MAS_ACIERTOS', opcional: true },
+      { codigo: 'MATCH', nombre: 'Match', orden: 2, tipo: 'ESCALONADA', aciertosQuePagan: [6, 5, 4], opcional: false },
+      { codigo: 'DESQUITE', nombre: 'Desquite', orden: 3, tipo: 'ESCALONADA', aciertosQuePagan: [6], opcional: false },
+      { codigo: 'SALE_O_SALE', nombre: 'Sale o Sale', orden: 4, tipo: 'MAS_ACIERTOS', opcional: false },
     ],
   },
 

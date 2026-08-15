@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LOTO PLUS DE LA CIUDAD</title>
+    <script>
+      // Analítica gateada por consentimiento — cookie-banner.js la carga SOLO si el usuario acepta "Analíticas"
+      window.__ANALYTICS = {
+        ga4: "G-J1GK3F2YQB",
+        gtm: "GTM-PGDZ992J",
+        clarity: "xnv24gv54n"
+      };
+    </script>
+  <meta name="description" content="Participá en del Loto Plus de la Ciudad." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Bungee&amp;family=Anton&amp;family=Oswald:wght@400;500;600;700&amp;family=Nunito:wght@400;600;700;900&amp;family=Barlow:wght@400;500;600;700;900&amp;family=Barlow+Condensed:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+  <link rel="icon" href="images/favicon/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/favicon/favicon-180x180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#9e1010">
+<!-- SEO Básico -->
+<meta name="description" content="Loto Plus: elegí 6 números, sumá tu Número Plus y participá en 4 sorteos con un solo ticket. Tradicional, Match, Desquite y Sale o Sale.">
+<meta name="robots" content="index, follow">
+<meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1">
+<link rel="canonical" href="https://loto.loteriadelaciudad.gob.ar/">
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+  <meta property="og:title"       content="Loto Plus — Lotería de la Ciudad" />
+  <meta property="og:description" content="Un solo precio, cuatro chances de ser millonario." />
+  <meta property="og:image"       content="https://loto.loteriadelaciudad.gob.ar/og-image.php?pozo=19233000000" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url"         content="https://loto.loteriadelaciudad.gob.ar/" />
+  <meta property="og:type"        content="website" />
+  <!-- Twitter / X -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Loto Plus — Lotería de la Ciudad" />
+  <meta name="twitter:description" content="Un solo precio, cuatro chances de ser millonario." />
+  <meta name="twitter:image"       content="https://loto.loteriadelaciudad.gob.ar/og-image.php?pozo=19233000000" />
+ <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/resultados.css" />
+  <link rel="stylesheet" href="css/premios.css" />
+  <link rel="stylesheet" href="css/cookie-banner.css" />
+  <style>
+    :root {
+      /* Fondos */
+      --negro-suave:   #9e1010;
+      --negro-medio:   #7a0d0d;
+      --footer-bg:     #5c0808;
+      --navbar-scroll: rgba(107, 11, 9, 0.95);
+      /* Colores de marca */
+      --azul-profundo:  #8a0000;
+      --azul-electrico: #cc0000;
+      --cian-vibrante:  #FFD700;
+      --amarillo:       #FFD700;
+      /* Textos */
+      --blanco:      #FFFFFF;
+      --gris-plata:  #FFE9E9;
+      /* Botones */
+      --btn-primary-bg:     linear-gradient(90deg, #FFD700, #FFA500);
+      --btn-primary-color:  #5c0808;
+      --btn-primary-shadow: rgba(255, 215, 0, 0.4);
+      --btn-ghost-color:    #fff200;
+      --btn-ghost-border:   #fff200;
+      --btn-ghost-shadow:   rgba(255,242,0,.35);
+      /* Gradientes */
+      --grad-hero: radial-gradient(ellipse at center, #cc2020 0%, #8a0a0a 65%, #5c0808 100%);
+      --grad-cta:  linear-gradient(90deg,#fff200,#ffd700);
+      --grad-card: linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+      /* Tipografía */
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'Barlow', sans-serif;
+      --font-cond:    'Barlow Condensed', sans-serif;
+      --font-bungee:  'Bungee';
+      --font-anton:   'Anton';
+      --font-oswald:  'Oswald';
+      --font-nunito:  'Nunito';
+    }
+            .stadium-lights { display: none !important; }
+            .spotlight { display: none !important; }
+            .hero-orb--1, .hero-orb--2 { display: none !important; }
+          </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="./#home" class="nav-logo">
+		<img src="images/logos/LOTBA_blanco.svg" class="nav-logo-img" alt="LOTBA">
+      </a>
+
+      <!-- Links desktop (solo visibles en ≥768px, dentro del navbar) -->
+      <ul class="nav-links-desktop">
+        <li><a href="#como-jugar" class="nav-link">¿Cómo jugar?</a></li>
+        <li><a href="#resultados" class="nav-link">Resultados</a></li>
+        <li><a href="#programacion" class="nav-link">Programación</a></li>
+        <li><a href="#donde-jugar" class="nav-link">¿Dónde jugar?</a></li>
+        <li><a href="#faq" class="nav-link">FAQs</a></li>
+        <li><a href="javascript:void(0)" class="nav-link js-games-panel-trigger">Nuestros Juegos</a></li>
+      </ul>
+
+      <!-- Hamburger button -->
+      <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== MOBILE MENU OVERLAY (fuera del <nav> para evitar stacking context) ===== -->
+  <div id="mobileMenu" class="mobile-menu" aria-hidden="true">
+    <button class="nav-close-btn" id="navCloseBtn" aria-label="Cerrar menú">&times;</button>
+    <ul class="mobile-menu-links">
+      <li><a href="#como-jugar" class="nav-link">¿Cómo jugar?</a></li>
+      <li><a href="#resultados" class="nav-link">Resultados</a></li>
+      <li><a href="#programacion" class="nav-link">Programación</a></li>
+      <li><a href="#donde-jugar" class="nav-link">¿Dónde jugar?</a></li>
+      <li><a href="#faq" class="nav-link">FAQs</a></li>
+      <li><a href="javascript:void(0)" class="nav-link js-games-panel-trigger">Nuestros Juegos</a></li>
+    </ul>
+  </div>
+<!-- ==== HACE TU JUGADA ==== -->
+<a href="https://www.lotba.bet.ar/loto/" id="btn-hace-tu-jugada" class="floating-btn-jugada" target="_blank">
+    ¡JUGÁ AHORA!
+</a>
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="home">
+    <!-- Fondo animado -->
+<div class="hero-bg">
+  <div class="hero-orb hero-orb--1"></div>
+  <div class="hero-orb hero-orb--2"></div>
+  <div class="stadium-lights"></div>
+  <div class="particles"></div>
+  <div class="balls-container"></div>
+  <div class="spotlight"></div>
+</div>
+
+    <div class="hero-content container hero-centered">
+	
+      <div class="hero-badge fade-up" style="display: none !important;">3908</div>
+      <h1 class="hero-title fade-up">
+        <span class="hero-title-top"><img src="images/logos/logo-LOTO-plus.svg" class="hero-logo"></span>
+        <span class="hero-title-main">
+          <span class="tagline-shake">
+            <span class="tagline-glow" aria-hidden="true"></span>
+            <span class="tagline-wrapper">
+              <img alt="Te cambia la vida"
+                   src="images/te_cambia_la_vida.svg"
+                   class="tagline-img" />
+              <span class="tagline-shine-mask" aria-hidden="true">
+                <span class="tagline-shine-beam"></span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </h1>
+      <p class="hero-subtitle fade-up" style="display: none !important;"></p>
+   <div class="hero-content-wrapper fade-up">
+     <div class="hero-actions fade-up contador-pozo-color" id="contenedor-pozo"></div>
+	  <!-- El contador ahora vive afuera del párrafo, pero dentro del contenido del Hero class="subrrayado"-->
+    <div class="countdown-mini-section">
+        <h3 class="countdown-label">Próximo Sorteo</h3>
+        <div id="countdown" class="countdown-container">
+            <div class="time-block">
+                <span id="days">00</span>
+                <p>Días</p>
+            </div>
+            <div class="time-block">
+                <span id="hours">00</span>
+                <p>Horas</p>
+            </div>
+            <div class="time-block">
+                <span id="minutes">00</span>
+                <p>Minutos</p>
+            </div>
+            <div class="time-block">
+                <span id="seconds">00</span>
+                <p>Segundos</p>
+            </div>
+        </div>
+    </div>      
+
+     
+      <!-- Stats rápidas 
+      <div class="hero-stats fade-up">
+        <div class="hero-stat">
+          <span class="hero-stat-num">48</span>
+          <span class="hero-stat-label">Selecciones</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">104</span>
+          <span class="hero-stat-label">Partidos</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">3</span>
+          <span class="hero-stat-label">Países sede</span>
+        </div>
+      </div><<<<<w
+    </div>-->
+  <p class="hero-subtitle">
+        El pozo más grande del país.<br>Cuatro chances de ganar con una sola jugada.    </p>
+ <div class="hero-actions fade-up">
+        <a href="https://www.lotba.bet.ar/loto/" class="btn btn-ghost btn-lg">¡JUGÁ AHORA!</a>
+      </div>
+</div>
+
+    <!-- Scroll indicator Scroll-->
+    <div class="hero-scroll-hint">
+      <span></span>
+      <div class="scroll-arrow"></div>
+    </div>
+
+  </section>
+<div id="marquee-precios" class="marquee-container">
+    <div class="marquee-track">
+        <div class="marquee-content">
+            <img src="images/logos/logo-LOTO-plus.svg" class="marquee-logo" alt="Logo">
+            <strong class="precio">El diferencial de Loto Plus </strong>  🔸 Triplicá tu premio 🔸 Sumá tu Número Plus (0–9) a tu jugada 🔸 Si lo acertás, tu premio se triplica.
+
+        </div>
+    </div>
+</div>
+</div>
+  <!---------COMO JUGAR ------->
+  <!-- ===== CÓMO JUGAR ===== -->
+  <section class="howto-section section" id="como-jugar">
+    <div class="container">
+      <div class="section-header fade-up">
+        <h2 class="section-title">¿Cómo jugar? <span class="precio">paso a paso</span></h2>
+        <p class="section-sub"></p>
+      </div>
+<div class="seccion-pasos">
+    <div class="steps-container" data-anim-trigger>
+
+        <div class="step-card fade-left">
+            <div class="step-badge">1</div>
+            <div class="step-body">
+                <h3>Elegí 6 números</h3>
+                <p>Seleccionalos del 0 al 45<br>y ganá millones.</p>
+            </div>
+        </div>
+
+        <div class="step-card fade-left">
+            <div class="step-badge">2</div>
+            <div class="step-body">
+                <h3>Te regalamos un plus</h3>
+                <p>Elegí un número del 0 al 9<br>y triplicá tu premio.</p>
+            </div>
+        </div>
+
+        <div class="step-card fade-left">
+            <div class="step-badge">3</div>
+            <div class="step-body">
+                <h3>¡Listo!</h3>
+                <p>Con un solo ticket, participás en las 4 modalidades.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="banner-destacado">
+        UN SOLO PRECIO, CUATRO CHANCES DE SER MILLONARIO
+    </div>
+</div>
+      </div>
+    </div>
+  </section>
+  
+ <section class="howto-section section borde-degradado-top" id="modalidades">
+    <div class="container">
+      <div class="section-header fade-up">
+        <h2 class="section-title">Jugás con<span class="precio">4 chances</span> de ganar con solo ticket</h2>
+      </div>
+	  <section class="seccion-modalidades" data-anim-trigger>
+  <!-- Banner pill superior -->
+  <p class="modalidades-pill fade-up">Triplica tu premio. <span style="color:#fff;">Sumá a tu jugada el Número Plus (0–9)</span></p>
+
+  <!-- Grid de modalidades -->
+  <div class="modalidades-grid">
+
+    <!-- Tradicional -->
+    <div class="step-card fade-up">
+      <div class="modalidades-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-target h-5 w-5 text-lp-white" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+      </div>
+      <div class="step-body">
+        <h3>Tradicional</h3>
+        <p>Ganás con 6, 5 y 4 aciertos.</p>
+      </div>
+    </div>
+
+    <!-- Match -->
+    <div class="step-card fade-up">
+      <div class="modalidades-icon">
+       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw h-5 w-5 text-lp-white" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
+      </div>
+      <div class="step-body">
+        <h3>Match</h3>
+        <p>Segunda oportunidad, ganás con 6, 5 y 4 aciertos.</p>
+      </div>
+    </div>
+
+    <!-- Desquite -->
+    <div class="step-card fade-up">
+      <div class="modalidades-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield h-5 w-5 text-lp-white" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg>
+      </div>
+      <div class="step-body">
+        <h3>Desquite</h3>
+        <p>Ganás con solo 6 aciertos.</p>
+      </div>
+    </div>
+
+    <!-- Sale o Sale — tarjeta destacada -->
+    <div class="step-card step-card--active fade-up">
+      <div class="modalidades-icon" style="color: #ffff00;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-party-popper h-5 w-5 text-lp-accent" aria-hidden="true"><path d="M5.8 11.3 2 22l10.7-3.79"></path><path d="M4 3h.01"></path><path d="M22 8h.01"></path><path d="M15 2h.01"></path><path d="M22 20h.01"></path><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"></path><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17"></path><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7"></path><path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"></path></svg>
+      </div>
+      <div class="step-body">
+        <h3 style="color: #ffff00;">Sale o Sale</h3>
+        <p>El pozo se reparte entre los jugadores con más aciertos.  
+Siempre hay ganadores</p>
+      </div>
+      <span class="modalidades-chip" >Siempre hay ganadores</span>
+    </div>
+	
+</div> <p class="modalidades-pill-bottom fade-up" style="display:none;">Siempre hay ganadores</p>
+</section>
+  </div>
+  
+</section>
+  <!-- ===== FIXTURE ===== -->
+ <section class="resultados-section section borde-degradado-top " id="resultados"  style="padding-bottom:1px !important;">
+    <div class="container">
+      <div class="section-header fade-up">
+        <h2 class="section-title precio">Resultados</h2>
+         <p class="section-sub" style="margin-top: 15px;">
+            <!--<a href="documentacion/REGLAMENTO_LOTO_PLUS.pdf" target="_blank">ver Programación</a>-->
+        </p>
+      </div>
+      <div class="custom-select-wrapper">
+    <input type="hidden" id="sorteoCombo" value="3908">
+
+    <div class="custom-select-trigger">— Seleccionar Sorteo —</div>
+
+    <ul class="custom-options">
+        <!--<li class="custom-option" data-value="">— Seleccionar Sorteo —</li>-->
+        <li class='custom-option selected' data-value='3908'>12/08/2026 - 22:00 - Sorteo Nº 3908</li><li class='custom-option ' data-value='3907'>08/08/2026 - 22:00 - Sorteo Nº 3907</li><li class='custom-option ' data-value='3906'>05/08/2026 - 22:00 - Sorteo Nº 3906</li><li class='custom-option ' data-value='3905'>01/08/2026 - 22:00 - Sorteo Nº 3905</li><li class='custom-option ' data-value='3904'>29/07/2026 - 22:00 - Sorteo Nº 3904</li><li class='custom-option ' data-value='3903'>25/07/2026 - 22:00 - Sorteo Nº 3903</li><li class='custom-option ' data-value='3902'>22/07/2026 - 22:00 - Sorteo Nº 3902</li><li class='custom-option ' data-value='3901'>18/07/2026 - 22:00 - Sorteo Nº 3901</li>    </ul>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const wrapper = document.querySelector(".custom-select-wrapper");
+  const trigger = document.querySelector(".custom-select-trigger");
+  const options = document.querySelectorAll(".custom-option");
+  const hiddenInput = document.getElementById("sorteoCombo");
+
+  if (wrapper && trigger) {
+    
+    // Al cargar, si ya hay una opción seleccionada por PHP, actualizamos el texto del botón
+    const initialSelected = wrapper.querySelector(".custom-option.selected");
+    if (initialSelected) {
+      trigger.textContent = initialSelected.textContent;
+    }
+
+    // Abrir y cerrar al hacer clic en el botón principal
+    trigger.addEventListener("click", (e) => {
+      wrapper.classList.toggle("open");
+      e.stopPropagation();
+    });
+
+    // Control del clic en las opciones dinámicas
+    options.forEach(option => {
+      option.addEventListener("click", function() {
+        const value = this.getAttribute("data-value");
+        const text = this.textContent;
+
+        // Actualizamos las clases activas visuales
+        options.forEach(opt => opt.classList.remove("selected"));
+        this.classList.add("selected");
+
+        // Cambiamos el texto del frente y guardamos el valor en el input
+        trigger.textContent = text;
+        if (hiddenInput) hiddenInput.value = value;
+        wrapper.classList.remove("open");
+
+        // Tu lógica exacta de redirección con overlay
+        if (value) {
+          const overlay = document.getElementById('loading-overlay');
+          if (overlay) overlay.style.display = 'flex';
+          
+          setTimeout(() => {
+            location.href = 'index.php?sorteo=' + value + '#resultados';
+          }, 80);
+        }
+      });
+    });
+
+    // Cerrar el menú si hacen clic en cualquier otro lado de la pantalla
+    document.addEventListener("click", () => {
+      wrapper.classList.remove("open");
+    });
+  }
+});
+</script>
+
+      </div>
+<div id="loading-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 999999; flex-direction: column; justify-content: center; align-items: center;">
+    <style>
+        .loader-wheel {
+            width: 70px;
+            height: 70px;
+            border: 6px solid rgba(255, 255, 255, 0.1);
+            border-top: 6px solid #ffffff;
+            border-radius: 50%;
+            animation: spin-loader 1s linear infinite;
+        }
+        @keyframes spin-loader {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <div class="loader-wheel"></div>
+    <p style="color: white; margin-top: 20px; font-family: 'Barlow', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+        Actualizando Evento...
+    </p>
+</div>
+      <div class="resultados-content" id="resultadosContent">
+          </div>
+      
+      <div class="section-footer fade-up">
+ 
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RESULTADOS ===== -->
+  <section class="resultados-section section borde-degradado-bottom  fondo-puntos-premium" id="premios" style="padding-top:0px !important;">
+    <div class="container">
+	<div class="section-header fade-up">
+	 <h2 class="section-title" style="display:none;"><span class="precio">Premios y Ganadores</span></h2>
+        <p class="section-sub"> <br><a href="https://www.loteriadelaciudad.gob.ar/cobrodepremios/" target="_blank" class="btn btn-ghost-simple btn-lg"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 28 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <rect x="1" y="1" width="26" height="20" rx="3"/>
+  <circle cx="1" cy="11" r="4" fill="currentColor" stroke="none"/>
+  <circle cx="27" cy="11" r="4" fill="currentColor" stroke="none"/>
+  <line x1="9" y1="11" x2="19" y2="11" stroke-dasharray="2 2"/>
+  <path d="M14 5 L15 8 L18 8 L15.5 10 L16.5 13 L14 11 L11.5 13 L12.5 10 L10 8 L13 8 Z"/>
+</svg>Controla tu Jugada</a></p>
+		  </div>
+
+	
+     <div id="premiosContent">
+	 <section class="resultados-section section" id="premios">
+	   <!-- Aquí se inyectará el contenido -->
+	 </section>
+	 </div>
+		        <div class="features-grid sectiongap fade-up">
+        <div class="feature-card fade-up" id="asegurados">
+          <div class="feature-icon"><h3>💰 POZOS ASEGURADOS</h3></div>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ===== PROGRAMACION ===== -->
+  <section class="why-section section" id="programacion">
+    <div class="container">
+      <div class="section-header fade-up">
+        <h2 class="section-title">PROGRAMACIÓN</h2>
+        <p class="section-sub">Encontrá aqui toda la programación del Loto Plus de la Ciudad.
+</p>
+
+     <style>
+/* select*/
+/* 1. El contenedor principal pasa a ser una caja flexible para controlar el bloque */
+.prog-select-wrapper {
+  position: relative; /* Necesario para que el z-index funcione */
+        z-index: 10;
+  max-width: 720px;
+  width: 100%;
+  margin: 20px auto;
+  user-select: none;
+  display: flex;
+  flex-direction: column; /* Alinea el botón y la lista uno abajo del otro */
+}
+
+/* El botón principal (Se mantiene centrado e idéntico) */
+.prog-select-trigger {
+  width: 100%;
+  color: #ffffff;
+  font-family: var(--font-body), sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 20px 55px 20px 55px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease;
+  z-index: 999999999; /* Se mantiene arriba del borde superior de la lista */
+}
+
+.prog-select-trigger::after {
+  content: "";
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fcc000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  transition: transform 0.3s ease;
+}
+
+.prog-select-trigger:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Estado abierto */
+.prog-select-wrapper.open .prog-select-trigger {
+  border-color: #fcc000;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 12px 12px 0 0;
+}
+
+.prog-select-wrapper.open .prog-select-trigger::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* La lista desplegable translúcida */
+.prog-options{
+    position:absolute;
+    top:100%;
+    left:0;
+    width:100%;
+
+    background-color:#611111;
+    border:2px solid #fcc000;
+    border-top:none;
+    border-radius:0 0 12px 12px;
+
+    margin:0;
+    padding:0;
+    list-style:none;
+
+    z-index:99999;
+
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    visibility:hidden;
+
+    transition:
+        max-height .3s ease-out,
+        opacity .2s ease,
+        visibility .2s ease;
+}
+
+/* CAMBIO CLAVE: Cuando se despliega, se adapta exactamente al tamaño de los elementos */
+.prog-select-wrapper.open .prog-options {
+  max-height: 1000px; /* Un techo alto para permitir la animación fluida de CSS */
+  height: auto;       /* Se encoge o estira según la cantidad exacta de <li> que traiga PHP */
+  overflow: visible;  /* Eliminamos el scrollbar interno molesto */
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Cada opción de la lista */
+.prog-option {
+  padding: 16px 24px;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-body), sans-serif;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.prog-option:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.prog-option.selected {
+  color: #fcc000;
+  font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.03);
+}
+.programa {
+    width: 100%;
+}
+
+.programa h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.prog-select-wrapper {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto 35px auto;
+   position:relative;
+    overflow:visible;
+
+}
+
+
+.dia-programa {
+    width: 100%;
+}
+
+.dia-programa table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.dia-programa th,
+.dia-programa td {
+    padding: 10px 24px;
+    text-align: center;
+}
+@media (max-width: 768px) {
+    .programa {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .dia-programa table {
+        width: 100%;
+    }
+
+    .dia-programa th,
+    .dia-programa td {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+
+    .prog-select-trigger {
+        padding: 16px 44px 16px 16px;
+        font-size: 0.95rem;
+    }
+}
+/* CONTENEDOR GENERAL */
+.programa-grid{
+    display:flex;
+    gap:40px;
+    align-items:flex-start;
+    justify-content:center;
+    flex-wrap:wrap;
+    width:100%;
+}
+
+/* BLOQUES */
+.programa-box{
+    flex:1;
+    min-width:min(420px, 100%);
+    max-width:720px;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+    .programa-grid{
+        flex-direction:column;
+        align-items:center;
+    }
+
+    .programa-box{
+        min-width:100%;
+    }
+}
+
+/* TITULOS */
+.programa-box h3{
+    text-align:center;
+    margin-bottom:20px;
+    font-size:1.6rem;
+    color:#fff;
+}
+
+/* TABLAS */
+.dia-programa table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.dia-programa th,
+.dia-programa td{
+    padding:14px 24px;
+    text-align:center;
+    color:#fff;
+}
+
+.dia-programa th{
+    color:#fcc000;
+    font-weight:700;
+}
+
+/* FORM MENSUAL */
+.programa-form{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.programa-form button{
+    width:100%;
+    padding:18px;
+    border:none;
+    border-radius:12px;
+    background:#fcc000;
+    color:#611111;
+    font-weight:700;
+    cursor:pointer;
+}
+.programa-form select{
+    width:100%;
+    color:#ffffff;
+    font-family:var(--font-body),sans-serif;
+    font-size:1.05rem;
+    font-weight:600;
+    background-color:rgba(255,255,255,0.05);
+    border:2px solid transparent;
+    border-radius:12px;
+    padding:20px 55px 20px 24px;
+    cursor:pointer;
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    transition:.3s ease;
+    outline:none;
+
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fcc000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 22px center;
+    background-size:16px;
+}
+
+.programa-form select:hover{
+    background-color:rgba(255,255,255,.08);
+}
+
+.programa-form select:focus{
+    border-color:#fcc000;
+    background-color:rgba(255,255,255,.08);
+}
+
+/* radios lindos */
+.programa-form label{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.programa-form input[type="radio"]{
+    accent-color:#fcc000;
+    transform:scale(1.25);
+}
+.programa-select-row{
+    display:flex;
+    gap:20px;
+    width:100%;
+}
+
+.programa-select-row .prog-select-wrapper{
+    flex:1;
+    margin:0;
+}
+
+@media(max-width:768px){
+    .programa-select-row{
+        flex-direction:column;
+    }
+}
+
+/* ── FIX: evitar que los contenedores padres recorten el dropdown absoluto ── */
+section#programacion,
+section#programacion .container {
+    overflow: visible !important;
+    /* z-index propio para que el dropdown quede por encima de la sección siguiente */
+    position: relative;
+    z-index: 10;
+}
+
+.programa-grid,
+.programa-box,
+.programa-form,
+.programa-select-row,
+.step-card {
+    overflow: visible !important;
+}
+</style>
+
+  <div class="programa-grid fade-up">
+
+    <!-- SEMANAL -->
+    <div class="programa-box step-card">
+        <h3>SEMANAL</h3>
+
+        <div class="prog-select-wrapper" id="progSelect">
+            <div class="prog-select-trigger">
+                Sábado 15 de agosto del 2026            </div>
+
+            <ul class="prog-options">
+                                    <li class="prog-option " data-value="dia0">
+                        Miércoles 12 de agosto del 2026                    </li>
+                                    <li class="prog-option selected" data-value="dia1">
+                        Sábado 15 de agosto del 2026                    </li>
+                            </ul>
+        </div>
+
+                    <div class="dia-programa" id="dia0" style="display:none;">
+                <table>
+                    <tr>
+                        <th>SORTEO</th>
+                        <th>HORARIO</th>
+                    </tr>
+
+                                        <tr>
+                        <td>3908</td>
+                        <td>22:00</td>
+                    </tr>
+                                    </table>
+            </div>
+                    <div class="dia-programa" id="dia1" style="display:block;">
+                <table>
+                    <tr>
+                        <th>SORTEO</th>
+                        <th>HORARIO</th>
+                    </tr>
+
+                                        <tr>
+                        <td>3909</td>
+                        <td>22:00</td>
+                    </tr>
+                                    </table>
+            </div>
+            </div>
+
+
+    <!-- MENSUAL -->
+    <div class="programa-box step-card">
+        <h3>MENSUAL</h3>
+
+       <form method="POST"
+      action="includes/descargaPrograma.php"
+      target="_blank"
+      class="programa-form">
+
+
+<div class="programa-select-row">
+
+    <!-- AÑO -->
+    <div class="prog-select-wrapper custom-select">
+        <input type="hidden" name="ano" value="2026">
+
+        <div class="prog-select-trigger">
+            2026        </div>
+
+        <ul class="prog-options">
+            <li class="prog-option" data-value="2025">2025</li>
+            <li class="prog-option selected" data-value="2026">2026</li>
+            <li class="prog-option" data-value="2027">2027</li>
+        </ul>
+    </div>
+
+
+    <!-- MES -->
+    <div class="prog-select-wrapper custom-select">
+        <input type="hidden" name="mes" value="08">
+
+        <div class="prog-select-trigger">
+            Agosto        </div>
+
+        <ul class="prog-options">
+                        <li class="prog-option "
+                data-value="01">
+                Enero            </li>
+                        <li class="prog-option "
+                data-value="02">
+                Febrero            </li>
+                        <li class="prog-option "
+                data-value="03">
+                Marzo            </li>
+                        <li class="prog-option "
+                data-value="04">
+                Abril            </li>
+                        <li class="prog-option "
+                data-value="05">
+                Mayo            </li>
+                        <li class="prog-option "
+                data-value="06">
+                Junio            </li>
+                        <li class="prog-option "
+                data-value="07">
+                Julio            </li>
+                        <li class="prog-option selected"
+                data-value="08">
+                Agosto            </li>
+                        <li class="prog-option "
+                data-value="09">
+                Septiembre            </li>
+                        <li class="prog-option "
+                data-value="10">
+                Octubre            </li>
+                        <li class="prog-option "
+                data-value="11">
+                Noviembre            </li>
+                        <li class="prog-option "
+                data-value="12">
+                Diciembre            </li>
+                    </ul>
+    </div>
+
+</div>
+
+
+<label>
+    <input type="radio" name="version" value="0">
+    Versión Simple
+</label>
+
+<label>
+    <input type="radio" name="version" value="1">
+    Versión Completa
+</label>
+
+<button id="submit">DESCARGAR</button>
+
+<input type="hidden" name="juego" value="LTO">
+
+</form>
+    </div>
+
+</div>
+<script src="js/programacion.js"></script>
+
+<script>
+document.querySelectorAll('.custom-select').forEach(select=>{
+
+    const trigger = select.querySelector('.prog-select-trigger');
+    const options = select.querySelectorAll('.prog-option');
+    const hidden = select.querySelector('input[type=hidden]');
+
+    trigger.addEventListener('click',()=>{
+        document.querySelectorAll('.custom-select').forEach(s=>{
+            if(s!==select) s.classList.remove('open');
+        });
+
+        select.classList.toggle('open');
+    });
+
+    options.forEach(option=>{
+
+        option.addEventListener('click',()=>{
+
+            options.forEach(o=>o.classList.remove('selected'));
+            option.classList.add('selected');
+
+            trigger.textContent = option.textContent.trim();
+            hidden.value = option.dataset.value;
+
+            select.classList.remove('open');
+        });
+
+    });
+
+});
+
+document.addEventListener('click',e=>{
+    if(!e.target.closest('.custom-select')){
+        document.querySelectorAll('.custom-select')
+            .forEach(s=>s.classList.remove('open'));
+    }
+});
+$( function() {
+    
+    $("#submit").click(function() {     
+      if($('input[type=radio][name=version]:checked').length == 0)
+      {
+         alert("Por favor seleccione la version");
+         return false;
+      }
+      else
+      {
+          return true;
+      }      
+    });
+    
+  } );  
+  
+
+  </script>
+    </div>
+  </section>
+ 
+  <!-- ===== DONDE JUGAR ===== -->
+  <section class="donde-section section borde-degradado-top borde-degradado-bottom fondo-puntos-premium" id="donde-jugar">
+     <div class="container">
+      <div class="section-header fade-up">
+        <h2 class="section-title">¿Dónde jugar?</h2>
+        <p class="section-sub" style="margin-bottom:50px;">Podés jugar en agencias oficiales de todo el país y online</p>
+		  <div class="hero-actions fade-up hero-centered">
+        <a href="https://www.lotba.bet.ar/loto/" target="_blank" class="btn btn-ghost btn-lg"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-110" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>¡JUGÁ AHORA!</a>     
+	 <a  target="_blank" class="btn btn-ghost-simple btn-lg" style="cursor:pointer;" onclick="abrirMapa()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-110" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>Encontrá tu agencia amiga</a>
+      </div>
+      </div></div>
+	   <div class="generador-container">
+    <h3 class="generador-titulo">¿NO SABÉS QUÉ NÚMEROS ELEGIR?</h3>
+    
+    <button id="btn-generar" class="btn-generar">
+        <svg class="icon-shuffle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 3 21 3 21 8"></polyline>
+            <line x1="4" y1="20" x2="21" y2="3"></line>
+            <polyline points="21 16 21 21 16 21"></polyline>
+            <line x1="15" y1="15" x2="21" y2="21"></line>
+            <line x1="4" y1="4" x2="9" y2="9"></line>
+        </svg>
+        Generar jugada aleatoria
+    </button>
+
+    <div class="esferas-container">
+        <div class="esfera random-num" data-tipo="normal">
+            <svg class="icono-bolilla" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clover h-6 w-6 text-lp-white/70 sm:h-7 sm:w-7" aria-hidden="true"><path d="M16.17 7.83 2 22"></path><path d="M4.02 12a2.827 2.827 0 1 1 3.81-4.17A2.827 2.827 0 1 1 12 4.02a2.827 2.827 0 1 1 4.17 3.81A2.827 2.827 0 1 1 19.98 12a2.827 2.827 0 1 1-3.81 4.17A2.827 2.827 0 1 1 12 19.98a2.827 2.827 0 1 1-4.17-3.81A1 1 0 1 1 4 12"></path><path d="m7.83 7.83 8.34 8.34"></path></svg>
+            <span class="numero-texto"></span>
+        </div>
+        <div class="esfera random-num" data-tipo="normal">
+            <svg class="icono-bolilla" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles h-6 w-6 text-lp-white/70 sm:h-7 sm:w-7" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>
+            <span class="numero-texto"></span>
+        </div>
+        <div class="esfera random-num" data-tipo="normal">
+            <svg class="icono-bolilla" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles h-6 w-6 text-lp-white/70 sm:h-7 sm:w-7" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>
+            <span class="numero-texto"></span>
+        </div>
+        <div class="esfera random-num" data-tipo="normal">
+           <svg class="icono-bolilla" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gift h-6 w-6 text-lp-white/70 sm:h-7 sm:w-7" aria-hidden="true"><path d="M12 7v14"></path><path d="M20 11v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8"></path><path d="M7.5 7a1 1 0 0 1 0-5A4.8 8 0 0 1 12 7a4.8 8 0 0 1 4.5-5 1 1 0 0 1 0 5"></path><rect x="3" y="7" width="18" height="4" rx="1"></rect></svg>
+            <span class="numero-texto"></span>
+        </div>
+        <div class="esfera random-num" data-tipo="normal">
+            <svg class="icono-bolilla" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-crown h-6 w-6 text-lp-white/70 sm:h-7 sm:w-7" aria-hidden="true"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"></path><path d="M5 21h14"></path></svg>
+            <span class="numero-texto"></span>
+        </div>
+        <div class="esfera random-num" data-tipo="normal">
+            <svg class="icono-bolilla" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem h-6 w-6 text-lp-white/70 sm:h-7 sm:w-7" aria-hidden="true"><path d="M10.5 3 8 9l4 13 4-13-2.5-6"></path><path d="M17 3a2 2 0 0 1 1.6.8l3 4a2 2 0 0 1 .013 2.382l-7.99 10.986a2 2 0 0 1-3.247 0l-7.99-10.986A2 2 0 0 1 2.4 7.8l2.998-3.997A2 2 0 0 1 7 3z"></path><path d="M2 9h20"></path></svg>
+            <span class="numero-texto"></span>
+        </div>
+
+        <span class="esfera-plus">+</span>
+
+        <div class="esfera esfera-bonus random-num" data-tipo="bonus">
+            <svg class="icono-bolilla" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart h-6 w-6 text-lp-ink/70 sm:h-7 sm:w-7" aria-hidden="true"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"></path></svg>
+            <span class="numero-texto"></span>
+        </div>
+    </div>
+
+    <p id="generador-feedback" class="generador-subtexto">Tu jugada de la suerte aparecerá acá</p>
+</div>
+  </section>
+  <!-- ===== FAQ ===== -->
+  <section class="faq-section section" id="faq">
+    <div class="container">
+      <div class="section-header fade-up">
+        <h2 class="section-title">FAQs</h2>
+      </div>
+      <div class="faq-list fade-up" id="faqList">
+        <!-- Renderizado por JS -->
+      </div>
+	 
+    </div>
+  </section>
+  <!-- ===== AGENICA ==== -->
+  <div class="modal" id="modalMapa">
+    <div class="modal-content">
+
+        <span class="cerrar" onclick="cerrarMapa()">×</span>
+
+        <div id="mapContainer"></div>
+
+    </div>
+</div>
+
+<script>
+function abrirMapa() {
+
+    document.getElementById("modalMapa").style.display = "flex";
+
+    document.getElementById("mapContainer").innerHTML = `
+  <h2>ENCONTRÁ TU AGENCIA AMIGA</h2>      <iframe
+            id="mapFrame"
+            width="100%"
+            height="100%"
+            style="border:0"
+            loading="lazy"
+            allowfullscreen
+            src="https://www.loteriadelaciudad.gob.ar:8443/SmartDeviceLOTBA/servlet/wpnagenciamapa">
+        </iframe>
+    `;
+
+  
+}
+
+function cerrarMapa() {
+    document.getElementById("modalMapa").style.display = "none";
+    document.getElementById("mapContainer").innerHTML = "";
+}
+</script>
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="images/logos/logo-LOTO-plus.svg" style="max-width:180px;min-width:150px;width:40%;height:auto;" alt="Loto Plus">
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Info</h4>
+            <ul>
+              <li><a href="documentacion/REGLAMENTO_LOTO_PLUS.pdf" target="_blank">Términos y condiciones</a></li>
+              <li><a href="#" id="cookie-reopen" onclick="CookieBanner.show(); return false;">Preferencias de cookies</a></li>
+              <li><a href="mailto:atencionalcliente@loteriadelaciudad.gob.ar">Atención al Cliente</a></li>
+            </ul>
+          </div>
+		  	     <div class="footer-col">
+            <h4>Seguinos</h4>
+            <div class="footer-social">
+              <a href="https://www.instagram.com/lotoplus.ar/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="footer-social-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              </a>
+              <a href="https://www.facebook.com/lotoplus.ar?locale=es_LA" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="footer-social-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+              <a href="https://www.youtube.com/channel/UC3M26J9ge2LTG-uWJO_TqaQ" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="footer-social-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Imagen legal: fuera de footer-brand para usar el ancho completo del container -->
+      <div class="footer-legal-row">
+        <a href="https://www.juegosegurolegal.gob.ar/" target="_blank"  class="linkLegal"><img src="images/legal.svg" class="footer-legal" alt="Juego responsable"></a>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 LOTBA S.A.U. - Lotería de la Ciudad de Buenos Aires.</p>
+      </div>
+    </div>
+  </footer>
+
+<!-- 1. Los datos primero (la materia prima) 
+<script src="js/fixture-data.js"></script> -->
+
+<script>
+window.THEME_CONFIG = {
+    countdown_target:      "August 15, 2026 22:00:00",
+    confetti_enabled:      false,
+    confetti_colors:       ["#fff200","#ffd700","#ffffff","#ff2a00"],
+    hero_anim_balls:       false,
+    apuesta_minima:        "4.000",
+    dir_lotba:             "Av. Santa Fe 4362 (C1425BHS) Palermo CABA",
+    pago_agencia:          "2.100.000"};
+// Inicializado en 0; resultados-data.php lo sobreescribe con el valor real del último sorteo
+window.POZO_ULTIMO_SORTEO = 0;
+</script>
+<script src="includes/resultados-data.php?sorteo=3908"></script>
+
+
+<!-- 2. El motor después (el que construye) -->
+<script src="js/resultados-engine.js"></script>
+<script src="js/premios-engine.js"></script>
+
+<!-- 3. Tus otros scripts generales -->
+<script src="js/scripts.js"></script>
+<!-- 4. Pelotas de fútbol flotantes en canvas -->
+<script src="js/anima.js"></script>
+<script>
+// Overlay de carga: se muestra durante el renderizado inicial de los motores.
+// Los datos ya están disponibles vía window.FIXTURE_DATA (cargados por el <script src> anterior).
+// Se oculta después del primer ciclo de paint post-DOMContentLoaded.
+(function () {
+    var loading = document.getElementById('loading-overlay');
+    var resultados = document.getElementById('resultadosContent');
+    var premios = document.getElementById('premiosContent');
+
+    if (!loading) return;
+
+    loading.style.display = 'flex';
+    if (resultados) resultados.classList.add('loading-blur');
+    if (premios) premios.classList.add('loading-blur');
+
+    document.addEventListener('DOMContentLoaded', function () {
+        requestAnimationFrame(function () {
+            loading.style.display = 'none';
+            if (resultados) resultados.classList.remove('loading-blur');
+            if (premios) premios.classList.remove('loading-blur');
+        });
+    });
+}());
+</script>
+<!-- ===== COOKIE BANNER ===== -->
+<!-- Pegá esto justo antes del cierre </body> en index.html -->
+
+<div id="cookie-overlay" class="cookie-overlay" role="dialog" aria-modal="true" aria-label="Preferencias de cookies" >
+  <div class="cookie-banner">
+
+    <div class="cookie-top">
+      <div class="cookie-icon">🍪</div>
+      <div class="cookie-text">
+        <h3>Usamos cookies</h3>
+        <p>
+          LOTBA S.A.U. utiliza cookies propias y de terceros para garantizar el funcionamiento del sitio, recordar preferencias de navegación y obtener estadísticas anónimas de uso que permitan mejorar los servicios ofrecidos. Podés aceptar todas las cookies, rechazarlas o personalizar tus preferencias. Más información en nuestra
+          <a href="verPoliticaPrivacidad.php" target="_blank">Política de Privacidad y Cookies</a>.
+        </p>
+      </div>
+    </div>
+
+    <div class="cookie-panels">
+      <div class="cookie-panel">
+        <input type="checkbox" checked disabled id="ck-necesarias">
+        <div>
+          <label class="panel-label">Necesarias <span class="panel-badge">SIEMPRE</span></label>
+          <div class="panel-desc">Sesión, seguridad y funcionamiento básico del sitio.</div>
+        </div>
+      </div>
+      <div class="cookie-panel">
+        <input type="checkbox" id="ck-analiticas">
+        <div>
+          <label for="ck-analiticas" class="panel-label">Analíticas</label>
+          <div class="panel-desc">Nos ayudan a entender cómo usás el sitio para mejorarlo.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cookie-actions">
+      <button class="btn-cookie btn-reject" id="cookie-reject">Rechazar todo</button>
+      <button class="btn-cookie btn-custom" id="cookie-save">Guardar preferencias</button>
+      <button class="btn-cookie btn-accept" id="cookie-accept">Aceptar todo</button>
+    </div>
+
+    <p class="cookie-mini-note">Podés cambiar tus preferencias en cualquier momento desde el pie de página.</p>
+  </div>
+</div>
+
+<!-- Link para reabrir desde el footer (agregalo en el footer) -->
+<!-- <a href="#" id="cookie-reopen" onclick="CookieBanner.show(); return false;">Preferencias de cookies</a> -->
+
+<script src="js/cookie-banner.js?v=2"></script>
+<!--  TAB JUEGOS -->
+
+
+<div id="games-panel" class="games-panel-container">
+    <div class="panel-header">
+        <button id="close-panel" class="btn-close">▼</button>
+    </div>
+    <div class="panel-content">
+        <div class="game-logo-item">
+        <a href="https://quiniela.loteriadelaciudad.gob.ar/" target="_blank" rel="noopener noreferrer">
+            <img src="images/logos/quinielaIco.svg" alt="Quiniela">
+        </a>
+    </div>
+        <div class="game-logo-item">
+        <a href="https://poceada.loteriadelaciudad.gob.ar/" target="_blank" rel="noopener noreferrer">
+            <img src="images/logos/poceadaIco.svg" alt="Poceada">
+        </a>
+    </div>
+        <div class="game-logo-item">
+        <a href="https://tombolina.loteriadelaciudad.gob.ar/" target="_blank" rel="noopener noreferrer">
+            <img src="images/logos/tombolinaIco.svg" alt="Tombolina">
+        </a>
+    </div>
+        <div class="game-logo-item">
+        <a href="https://loto.loteriadelaciudad.gob.ar/" target="_blank" rel="noopener noreferrer">
+            <img src="images/logos/lotoIco.svg" alt="Loto">
+        </a>
+    </div>
+        <div class="game-logo-item">
+        <a href="https://loto5.loteriadelaciudad.gob.ar/" target="_blank" rel="noopener noreferrer">
+            <img src="images/logos/loto5Ico.svg" alt="Loto 5">
+        </a>
+    </div>
+        <div class="game-logo-item">
+        <a href="https://quinielaya.loteriadelaciudad.gob.ar/" target="_blank" rel="noopener noreferrer">
+            <img src="images/logos/quinielaYaIco.svg" alt="Quiniela Ya">
+        </a>
+    </div>
+        <div class="game-logo-item">
+        <a href="https://lagrande.loteriadelaciudad.gob.ar/" target="_blank" rel="noopener noreferrer">
+            <img src="images/logos/grandeIco.svg" alt="La Grande">
+        </a>
+    </div>
+        <div class="game-logo-item">
+        <a href="https://prode.loteriadelaciudad.gob.ar/" target="_blank" rel="noopener noreferrer">
+            <img src="images/logos/prodeIco.svg" alt="Prode">
+        </a>
+    </div>
+        <div class="game-logo-item">
+        <a href="https://otrachance.gob.ar/" target="_blank" rel="noopener noreferrer">
+            <img src="images/logos/otraChanceIco.svg" alt="Otra Chance">
+        </a>
+    </div>
+    </div>
+</div>
+</body>
+</html>
