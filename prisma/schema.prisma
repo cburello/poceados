@@ -1,13 +1,13 @@
-// Base local en un archivo. Sin servidor, sin Docker.
-// Migrar con: npx prisma migrate dev
+// Postgres en Supabase. Migrar con: npx prisma migrate dev
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 /// Un concurso de un juego. Las jugadas del usuario NO viven acá:
@@ -43,8 +43,7 @@ model ResultadoModalidad {
   sorteoId        String
 
   modalidadCodigo String
-  /// Array de enteros serializado. SQLite no tiene tipo array.
-  numerosJson     String
+  numeros         Int[]
   /// Número Plus del sorteo, sólo para juegos que lo tienen.
   plus            Int?
   /// Sólo para modalidades MAS_ACIERTOS. null = todavía no se sabe.

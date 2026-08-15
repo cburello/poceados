@@ -1,43 +1,47 @@
 -- CreateTable
 CREATE TABLE "Sorteo" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "juegoCodigo" TEXT NOT NULL,
     "nroConcurso" INTEGER NOT NULL,
-    "fecha" DATETIME NOT NULL,
+    "fecha" TIMESTAMP(3) NOT NULL,
     "estado" TEXT NOT NULL DEFAULT 'PENDIENTE',
-    "verificadoEn" DATETIME,
+    "verificadoEn" TIMESTAMP(3),
     "urlExtracto" TEXT,
-    "creadoEn" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "editadoEn" DATETIME NOT NULL
+    "creadoEn" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "editadoEn" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Sorteo_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "ResultadoModalidad" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "sorteoId" TEXT NOT NULL,
     "modalidadCodigo" TEXT NOT NULL,
-    "numerosJson" TEXT NOT NULL,
+    "numeros" INTEGER[],
     "plus" INTEGER,
     "nivelGanador" INTEGER,
-    CONSTRAINT "ResultadoModalidad_sorteoId_fkey" FOREIGN KEY ("sorteoId") REFERENCES "Sorteo" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+
+    CONSTRAINT "ResultadoModalidad_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Escalon" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "resultadoId" TEXT NOT NULL,
     "aciertos" INTEGER,
     "etiqueta" TEXT NOT NULL,
-    "pozo" REAL NOT NULL,
+    "pozo" DOUBLE PRECISION NOT NULL,
     "ganadores" INTEGER NOT NULL,
-    "premioUnitario" REAL NOT NULL,
+    "premioUnitario" DOUBLE PRECISION NOT NULL,
     "vacante" BOOLEAN NOT NULL DEFAULT false,
-    CONSTRAINT "Escalon_resultadoId_fkey" FOREIGN KEY ("resultadoId") REFERENCES "ResultadoModalidad" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+
+    CONSTRAINT "Escalon_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "LecturaFuente" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "sorteoId" TEXT,
     "juegoCodigo" TEXT NOT NULL,
     "nroConcurso" INTEGER NOT NULL,
@@ -46,8 +50,9 @@ CREATE TABLE "LecturaFuente" (
     "payloadJson" TEXT NOT NULL,
     "ok" BOOLEAN NOT NULL DEFAULT true,
     "error" TEXT,
-    "leidoEn" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "LecturaFuente_sorteoId_fkey" FOREIGN KEY ("sorteoId") REFERENCES "Sorteo" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+    "leidoEn" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "LecturaFuente_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -64,3 +69,12 @@ CREATE INDEX "Escalon_resultadoId_idx" ON "Escalon"("resultadoId");
 
 -- CreateIndex
 CREATE INDEX "LecturaFuente_juegoCodigo_nroConcurso_idx" ON "LecturaFuente"("juegoCodigo", "nroConcurso");
+
+-- AddForeignKey
+ALTER TABLE "ResultadoModalidad" ADD CONSTRAINT "ResultadoModalidad_sorteoId_fkey" FOREIGN KEY ("sorteoId") REFERENCES "Sorteo"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Escalon" ADD CONSTRAINT "Escalon_resultadoId_fkey" FOREIGN KEY ("resultadoId") REFERENCES "ResultadoModalidad"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "LecturaFuente" ADD CONSTRAINT "LecturaFuente_sorteoId_fkey" FOREIGN KEY ("sorteoId") REFERENCES "Sorteo"("id") ON DELETE CASCADE ON UPDATE CASCADE;

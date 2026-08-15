@@ -1,129 +1,135 @@
-# Control de Poceados - backend
+# Control de Poceados
 
-API local para controlar jugadas de Quini 6, Loto Plus y demás juegos poceados.
-Todo corre en tu máquina: base SQLite en un archivo, sin Docker ni servidor de base.
+App para controlar jugadas de lotería argentina. Guardás tus números una vez y
+después de cada sorteo la app te dice qué acertaste y cuánto cobrás.
+
+Backend Node 22 + TypeScript + Fastify + Prisma. Frontend React + Vite (PWA).
+
+---
 
 ## Arrancar
 
 ```
 npm install
 npx prisma migrate dev --name inicial
-npm run dev
+npm test          # 28 tests, sin red ni base
+npm run dev       # backend en :3000
+npm run ingesta   # baja los resultados y llena la base
 ```
 
-Queda en http://127.0.0.1:3000
-
-Verificar que anda:
-
-```
-curl http://127.0.0.1:3000/salud
-curl http://127.0.0.1:3000/juegos
-```
-
-## Tests
-
-```
-npm test
-```
-
-Son 11 y no necesitan red ni base: el motor de control es una función pura.
-El caso base usa datos reales del Quini 6 concurso 3399 del 12/08/2026.
-
-## Cómo está armado
-
-```
-src/
-  config/juegos.ts        Catálogo de juegos y modalidades. Configuración, no código.
-  dominio/control.ts      Motor de control. Función pura, sin base ni red.
-  dominio/control.test.ts Tests contra el concurso 3399 real.
-  proveedores/tipos.ts    Contrato que toda fuente tiene que cumplir.
-  proveedores/santafe.ts  Lector del sitio oficial de Lotería de Santa Fe.
-  ingesta/conciliar.ts    Cruce de fuentes antes de publicar un resultado.
-  servidor.ts             Fastify con las rutas.
-prisma/schema.prisma      Base SQLite.
-```
-
-## Las tres decisiones que explican el resto
-
-**Los juegos son datos.** Agregar Brinco o Telekino es editar `juegos.ts`, no tocar
-el motor. Cada modalidad declara su `tipo` y el motor sabe qué hacer con cada uno.
-Si algún día hay que tocar el motor para sumar un juego, falta un tipo.
-
-**El control es una función pura.** No consulta base ni red, así que corre igual en
-el servidor y en el navegador. La PWA importa el mismo archivo y controla sin conexión.
-
-**Nada se publica con una sola fuente.** `conciliar.ts` pide el mismo concurso a
-varias fuentes y compara sólo los números, no los montos (que se actualizan a
-distinto ritmo). Si no coinciden, el sorteo queda en `DISCREPANCIA` y la API
-responde 409 en vez de un resultado posiblemente falso.
-
-## Los tres estados del premio
-
-- `GANADOR` - cobrás, con el monto
-- `SIN_PREMIO` - no cobrás, con el motivo
-- `PENDIENTE_EXTRACTO` - no se puede saber todavía
-- `NO_JUGADA` - no pagaste esa modalidad en el cupón
-
-El tercero existe por Siempre Sale y Sale o Sale: ahí el pozo va a quien tenga
-**más** aciertos del país, no a un umbral fijo. Con 5 aciertos cobrás sólo si nadie
-hizo 6. Sin el dato del extracto no hay forma de resolverlo, y adivinar sería peor
-que esperar.
-
-## Pendientes antes de usarlo en serio
-
-1. **Verificar los selectores de `santafe.ts` contra la página real.** Están armados
-   leyendo el maquetado, no probados contra el sitio en vivo. Es el primer trabajo.
-2. **Verificar rangos y modalidades** de Loto Plus, Brinco y Telekino contra los
-   reglamentos oficiales. En `juegos.ts` están marcados `verificado: false` porque
-   salen de fuentes secundarias, que ya demostraron equivocarse.
-3. **Guardar fixtures de HTML** en `test/fixtures/` para que un cambio del sitio se
-   detecte con los tests en vez de en producción.
-4. Segundo proveedor (el PDF del extracto) para que la conciliación tenga con qué comparar.
-5. Scheduler post sorteo: Quini 6 miércoles y domingos 21:15, Loto Plus miércoles y
-   sábados 22:00. Arrancar 40 minutos después con reintentos.
-
-## Aviso
-
-Aplicación no oficial. Los datos son informativos. El extracto oficial impreso de cada
-lotería es el único documento válido para el cobro de premios.
-
----
-
-## Frontend (web/)
-
-PWA en React + Vite. Sin Tailwind: el diseño es CSS a medida, el mismo del prototipo aprobado.
+En otra terminal:
 
 ```
 cd web
 npm install
-npm run dev
+npm run dev       # app en :5173
 ```
 
-Abre en http://localhost:5173
+---
 
-**El backend tiene que estar corriendo en otra terminal** (`npm run dev` desde la raíz).
-Vite redirige `/api/*` al puerto 3000, así que no hay problemas de CORS.
+## Estado actual
 
-### Lo importante del frontend
+| Juego | Config | Ingesta | Fuente |
+|---|---|---|---|
+| Quini 6 | verificada | funciona | loteriasantafe.gov.ar |
+| Loto Plus | verificada | funciona | loto.loteriadelaciudad.gob.ar |
+| Brinco | sin verificar | cableada, sin probar | Santa Fe |
+| Telekino | sin verificar | falta | otro organismo |
+| Loto 5 Plus | falta en catalogo | falta | loto5.loteriadelaciudad.gob.ar |
+| Poceada Federal | falta en catalogo | falta | Santa Fe |
 
-**No duplica la lógica de control.** El alias `@dominio` de `vite.config.ts` apunta a
-`../src`, así que `App.tsx` importa exactamente el mismo `control.ts` que testeamos en el
-backend. Una sola implementación. Si mañana cambia una regla, cambia en los dos lados sola.
+Los dos juegos que andan quedan en estado `PARCIAL`: hay una sola fuente por juego
+y la conciliacion exige dos para declarar `CONFIRMADO`.
 
-**Las jugadas viven en IndexedDB**, no en el servidor. No hay cuenta ni login. El
-exportar/importar de Ajustes no es un extra: es la única red de seguridad que tenés.
+---
 
-**Funciona sin conexión.** Los sorteos que baja quedan cacheados en IndexedDB. Si el backend
-está apagado, la app muestra el aviso ámbar arriba y sigue controlando con lo último que tenía.
+## Decisiones de diseno (no deshacer sin entender por que)
 
-### Estructura
+**Los juegos son configuracion, no codigo.** `src/config/juegos.ts` declara rango,
+cantidad de numeros, dias de sorteo y modalidades. Cada modalidad tiene un `tipo`
+(`ESCALONADA`, `MAS_ACIERTOS`, `DERIVADA`) y el motor sabe que hacer con cada uno.
+Si para agregar un juego hay que tocar el motor, falta un tipo.
 
-```
-web/src/
-  App.tsx                  Navegación y las pantallas raíz
-  estilos.css              Una sola hoja, tokens del prototipo
-  datos/almacen.ts         IndexedDB: jugadas y cache
-  datos/api.ts             Cliente del backend con fallback a cache
-  componentes/ui.tsx       Bola, Talon, FichaModalidad, Nota
-  pantallas/NuevaJugada.tsx  Alta en 3 pasos
-```
+**El control es una funcion pura.** `src/dominio/control.ts` no toca base ni red.
+El frontend lo importa via el alias `@dominio` de `vite.config.ts`, que apunta a
+`../src`. Una sola implementacion para servidor y navegador: no hay dos versiones
+que se desincronicen, y la PWA controla sin conexion.
+
+**Nada se publica con una sola fuente.** `src/ingesta/conciliar.ts` compara **solo
+los numeros**, no los montos: los montos se completan durante la noche y compararlos
+daria falsas discrepancias. Si dos fuentes no coinciden, el sorteo queda en
+`DISCREPANCIA` y la API responde 409 en vez de un resultado posiblemente falso.
+
+**Cuatro estados de premio**, no dos:
+- `GANADOR` con el monto
+- `SIN_PREMIO` con el motivo
+- `PENDIENTE_EXTRACTO` cuando todavia no se puede saber
+- `NO_JUGADA` cuando el usuario no pago esa modalidad
+
+El tercero existe por Siempre Sale (Quini 6) y Sale o Sale (Loto Plus): ahi el pozo
+va a quien tenga **mas** aciertos del pais, no a un umbral fijo. Con 5 aciertos
+cobras solo si nadie hizo 6. Sin el dato del extracto no hay forma de resolverlo, y
+adivinar es peor que esperar.
+
+**El "mejor resultado" excluye las modalidades DERIVADA.** El Premio Extra de Quini 6
+se juega contra 15 bolillas en vez de 6, asi que 5 aciertos ahi no valen lo mismo que
+5 en Tradicional. Un test cubre esto: fue un bug real.
+
+**Diferencia clave entre los dos juegos:** en Quini 6, Revancha y Siempre Sale se
+pagan aparte (`opcional: true`). En Loto Plus las cuatro modalidades vienen en el
+mismo ticket (`opcional: false`). Fue un error de configuracion que se corrigio
+leyendo el sitio oficial de LOTBA.
+
+**Las jugadas viven en IndexedDB del navegador**, no en el servidor. No hay cuentas.
+Por eso exportar/importar en Ajustes no es un extra: es la unica red de seguridad, y
+la unica forma de pasar jugadas entre dispositivos.
+
+---
+
+## Las fuentes, y por que fueron dificiles
+
+**Quini 6 (`src/proveedores/santafe.ts`).** La pagina publica
+`loteriasantafe.gov.ar/index.php/resultados/quini-6` **no tiene los resultados**: es
+una cascara con un iframe que JavaScript llena apuntando a otro servidor. El HTML de
+verdad esta en `apps.loteriasantafe.gov.ar:8443`. Ademas, el extracto **no trae ninguna
+fecha completa**: hay que armarla juntando el select de mes ("Agosto 2026") con el de
+sorteo ("Miercoles 12 - 3399"). Las columnas de la tabla de premios se leen **por nombre
+de encabezado**, no por posicion, porque Siempre Sale tiene una columna extra "Aciertos".
+
+**Loto Plus (`src/proveedores/lotba.ts`).** Mucho mas limpio: el endpoint
+`loto.loteriadelaciudad.gob.ar/includes/resultados-data.php?sorteo=NNNN` devuelve un
+archivo JS con `window.PREMIOS_DATA = [...]` ya estructurado. Hay que recortar el
+envoltorio antes de parsear. En Sale o Sale LOTBA publica **solo el nivel ganador**,
+que es justo el dato que en Quini 6 hay que deducir.
+
+**Los fixtures de `src/proveedores/fixtures/` son HTML y JS reales capturados de los
+sitios.** Los tests corren contra esos archivos, sin red. Si un sitio cambia el
+maquetado, los tests fallan y nos enteramos ahi, no con datos mal cargados en la base.
+Al agregar una fuente nueva, capturar el fixture primero.
+
+---
+
+## Proximos pasos, en orden
+
+1. **Migrar SQLite a Postgres (Supabase).** Cambiar `provider` en `schema.prisma`.
+   Aprovechar que Postgres tiene arrays nativos: `numerosJson String` pasa a
+   `numeros Int[]`, y se van los `JSON.parse` del servidor y la ingesta.
+2. **Desplegar el backend** en Railway o Fly.io, con scheduler (`node-cron`) para que
+   la ingesta corra sola. Quini 6 miercoles y domingos 21:15; Loto Plus miercoles y
+   sabados 22:00. Arrancar 40 minutos despues con reintentos.
+   Vercel no sirve para el backend: sus funciones son efimeras y no sostienen un cron.
+3. **Desplegar el frontend** en Vercel. Apuntar `VITE_API_URL` al backend desplegado
+   (hoy el proxy `/api` de `vite.config.ts` solo funciona en desarrollo).
+4. **Segundo proveedor para conciliar.** El mas facil: el XML que LOTBA publica junto
+   al PDF, en `archivos.xml` del mismo endpoint. Con eso Loto Plus llega a `CONFIRMADO`.
+5. **Boton "actualizar resultados"** en Ajustes, para forzar la ingesta desde la app.
+6. Juegos que faltan: Brinco y Poceada Federal salen del mismo servidor de Santa Fe;
+   Loto 5 Plus tiene su propio subdominio en LOTBA, probablemente con el mismo endpoint.
+
+---
+
+## Aviso
+
+Aplicacion no oficial. Los datos son informativos y pueden contener errores. El extracto
+oficial impreso de cada loteria es el unico documento valido para el cobro de premios.
+Jugar compulsivamente es perjudicial para la salud. Linea gratuita 0800-333-0333.

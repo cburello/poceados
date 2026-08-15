@@ -18,7 +18,7 @@ function aDominio(fila: any): Sorteo {
     fecha: fila.fecha.toISOString().slice(0, 10),
     resultados: fila.resultados.map((r: any) => ({
       modalidadCodigo: r.modalidadCodigo,
-      numeros: JSON.parse(r.numerosJson),
+      numeros: r.numeros,
       plus: r.plus ?? undefined,
       nivelGanador: r.nivelGanador,
       escalones: r.escalones

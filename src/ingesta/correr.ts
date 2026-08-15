@@ -73,7 +73,7 @@ async function ingestar(juegoCodigo: string) {
       data: {
         sorteoId: sorteo.id,
         modalidadCodigo: r.modalidadCodigo,
-        numerosJson: JSON.stringify(r.numeros),
+        numeros: r.numeros,
         plus: r.plus ?? null,
         nivelGanador: r.nivelGanador ?? null,
         escalones: {
