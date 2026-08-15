@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { JUEGOS, getJuego } from './config/juegos.ts';
 import { controlarJugada, validarJugada, type Jugada, type Sorteo } from './dominio/control.ts';
+import { iniciarProgramador } from './ingesta/programador.ts';
 
 const prisma = new PrismaClient();
 const app = Fastify({ logger: { transport: { target: 'pino-pretty' } } });
@@ -119,5 +120,7 @@ app.post<{ Body: { jugada: Jugada; nroConcurso?: number } }>(
 
 app.get('/salud', async () => ({ ok: true, hora: new Date().toISOString() }));
 
+iniciarProgramador(prisma);
+
 const puerto = Number.parseInt(process.env.PORT ?? '3000', 10);
-await app.listen({ port: puerto, host: '127.0.0.1' });
+await app.listen({ port: puerto, host: '0.0.0.0' });
