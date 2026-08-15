@@ -111,15 +111,16 @@ Al agregar una fuente nueva, capturar el fixture primero.
 
 ## Proximos pasos, en orden
 
-1. **Migrar SQLite a Postgres (Supabase).** Cambiar `provider` en `schema.prisma`.
-   Aprovechar que Postgres tiene arrays nativos: `numerosJson String` pasa a
-   `numeros Int[]`, y se van los `JSON.parse` del servidor y la ingesta.
-2. **Desplegar el backend** en Railway o Fly.io, con scheduler (`node-cron`) para que
-   la ingesta corra sola. Quini 6 miercoles y domingos 21:15; Loto Plus miercoles y
-   sabados 22:00. Arrancar 40 minutos despues con reintentos.
-   Vercel no sirve para el backend: sus funciones son efimeras y no sostienen un cron.
-3. **Desplegar el frontend** en Vercel. Apuntar `VITE_API_URL` al backend desplegado
-   (hoy el proxy `/api` de `vite.config.ts` solo funciona en desarrollo).
+1. ~~**Migrar SQLite a Postgres (Supabase).**~~ Hecho. `numeros Int[]` nativo,
+   se fueron los `JSON.parse`/`JSON.stringify` del servidor y la ingesta.
+2. ~~**Desplegar el backend.**~~ Hecho, en Railway: https://poceados-production.up.railway.app
+   Repo conectado a GitHub (`cburello/poceados`), deploy automatico en cada push a `master`.
+   Scheduler con `node-cron` activo (`src/ingesta/programador.ts`, hora Argentina):
+   Quini 6 miercoles y domingos 21:55, Loto Plus miercoles y sabados 22:40 (sorteo + 40 min),
+   con 4 reintentos cada 15 min si el sitio todavia no publico.
+3. **Desplegar el frontend** en Vercel. Apuntar `VITE_API_URL` a
+   `https://poceados-production.up.railway.app` (hoy el proxy `/api` de `vite.config.ts`
+   solo funciona en desarrollo).
 4. **Segundo proveedor para conciliar.** El mas facil: el XML que LOTBA publica junto
    al PDF, en `archivos.xml` del mismo endpoint. Con eso Loto Plus llega a `CONFIRMADO`.
 5. **Boton "actualizar resultados"** en Ajustes, para forzar la ingesta desde la app.
