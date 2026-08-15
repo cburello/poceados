@@ -35,10 +35,15 @@ export function Bolas({
   numeros,
   acertados,
   chicas,
+  plus,
+  plusAcertado,
 }: {
   numeros: number[];
   acertados?: number[];
   chicas?: boolean;
+  /** Número Plus de la jugada. Se dibuja aparte porque no compite con los otros. */
+  plus?: number;
+  plusAcertado?: boolean;
 }) {
   return (
     <div className="balls">
@@ -52,6 +57,14 @@ export function Bolas({
           }
         />
       ))}
+      {plus !== undefined && (
+        <span
+          className={'ball plus' + (plusAcertado ? ' hit' : '')}
+          title="Número Plus"
+        >
+          +{plus}
+        </span>
+      )}
     </div>
   );
 }
@@ -98,7 +111,12 @@ export function Talon({
         <div className="gname">{jugada.juegoCodigo.replace('_', ' ')}</div>
       </div>
 
-      <Bolas numeros={jugada.numeros} acertados={mejor?.acertados} />
+      <Bolas
+        numeros={jugada.numeros}
+        acertados={mejor?.acertados}
+        plus={jugada.plus}
+        plusAcertado={mejor?.plusAcertado}
+      />
 
       <div className="meta">
         <span>
@@ -124,9 +142,11 @@ export function Talon({
 export function FichaModalidad({
   m,
   numerosJugada,
+  plusJugada,
 }: {
   m: ControlModalidad;
   numerosJugada: number[];
+  plusJugada?: number;
 }) {
   const etiquetaAciertos =
     m.estado === 'NO_JUGADA'
@@ -147,7 +167,13 @@ export function FichaModalidad({
       {m.estado !== 'NO_JUGADA' && (
         <>
           <div className="nums">
-            <Bolas numeros={numerosJugada} acertados={m.acertados} chicas={false} />
+            <Bolas
+              numeros={numerosJugada}
+              acertados={m.acertados}
+              chicas={false}
+              plus={plusJugada}
+              plusAcertado={m.plusAcertado}
+            />
           </div>
           <table>
             <tbody>

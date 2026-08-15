@@ -116,6 +116,9 @@ export default function App() {
     return { h: 'Ajustes', e: '' };
   }
 
+  // Se recalcula en cada render: si no, el contador queda con el valor
+  // que tenia jugadas en el momento de navegar y muestra uno de menos.
+  const encabezado = vista.t === 'raiz' ? tituloRaiz(vista.raiz) : titulo;
   const enPush = vista.t !== 'raiz';
 
   return (
@@ -129,8 +132,8 @@ export default function App() {
           </button>
         )}
         <div>
-          {titulo.e && <div className="eyebrow">{titulo.e}</div>}
-          <h2>{titulo.h}</h2>
+          {encabezado.e && <div className="eyebrow">{encabezado.e}</div>}
+          <h2>{encabezado.h}</h2>
         </div>
       </div>
 
@@ -393,7 +396,12 @@ function Detalle({
 
           <Encabezado>Acierto por acierto</Encabezado>
           {control.modalidades.map((m) => (
-            <FichaModalidad key={m.modalidadCodigo} m={m} numerosJugada={jugada.numeros} />
+            <FichaModalidad
+              key={m.modalidadCodigo}
+              m={m}
+              numerosJugada={jugada.numeros}
+              plusJugada={jugada.plus}
+            />
           ))}
 
           <Nota tipo="info" titulo="Por qué cambian los aciertos">
