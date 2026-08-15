@@ -118,9 +118,9 @@ Al agregar una fuente nueva, capturar el fixture primero.
    Scheduler con `node-cron` activo (`src/ingesta/programador.ts`, hora Argentina):
    Quini 6 miercoles y domingos 21:55, Loto Plus miercoles y sabados 22:40 (sorteo + 40 min),
    con 4 reintentos cada 15 min si el sitio todavia no publico.
-3. **Desplegar el frontend** en Vercel. Apuntar `VITE_API_URL` a
-   `https://poceados-production.up.railway.app` (hoy el proxy `/api` de `vite.config.ts`
-   solo funciona en desarrollo).
+3. ~~**Desplegar el frontend.**~~ Hecho, en Vercel: https://poceados.vercel.app
+   Root Directory `web`, `VITE_API_URL` apuntando al backend de Railway (`api.ts`
+   usa esa variable en produccion y el proxy `/api` solo en desarrollo).
 4. **Segundo proveedor para conciliar.** El mas facil: el XML que LOTBA publica junto
    al PDF, en `archivos.xml` del mismo endpoint. Con eso Loto Plus llega a `CONFIRMADO`.
 5. **Boton "actualizar resultados"** en Ajustes, para forzar la ingesta desde la app.
