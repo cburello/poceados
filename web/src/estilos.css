@@ -33,7 +33,7 @@ body{
   background:#20262A;
   font-family:'Archivo',system-ui,sans-serif;
   color:var(--ink);
-  display:flex;flex-direction:column;align-items:center;
+  display:flex;flex-direction:column;align-items:stretch;
   padding:22px 14px 40px;gap:18px;min-height:100%;
 }
 .mono{font-family:'Martian Mono',monospace;font-variant-numeric:tabular-nums}
