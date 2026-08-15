@@ -51,12 +51,13 @@ export async function conciliar(
     };
   }
 
-  if (exitosas.length === 1) {
+  const unica = exitosas[0];
+  if (exitosas.length === 1 && unica) {
     return {
       estado: 'PARCIAL',
-      sorteo: exitosas[0].s,
+      sorteo: unica.s,
       lecturas,
-      detalle: `Sólo respondió ${exitosas[0].p.codigo}. Falta una segunda fuente para confirmar.`,
+      detalle: `Sólo respondió ${unica.p.codigo}. Falta una segunda fuente para confirmar.`,
     };
   }
 
