@@ -8,6 +8,8 @@
   },
   "scripts": {
     "dev": "node --watch --experimental-strip-types src/servidor.ts",
+    "start": "node --experimental-strip-types src/servidor.ts",
+    "postinstall": "prisma generate",
     "test": "node --test --experimental-strip-types",
     "db:migrar": "prisma migrate dev",
     "db:ver": "prisma studio",
