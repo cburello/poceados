@@ -13,6 +13,7 @@ import {
   Vacio,
   COLOR_JUEGO,
   pesos,
+  fechaLocal,
 } from './componentes/ui.tsx';
 
 type Raiz = 'hoy' | 'jugadas' | 'resultados' | 'ajustes';
@@ -202,7 +203,7 @@ export default function App() {
               abrir(
                 { t: 'sorteo', juego: s.juegoCodigo, nro: s.nroConcurso },
                 `Concurso ${s.nroConcurso}`,
-                new Date(s.fecha).toLocaleDateString('es-AR'),
+                fechaLocal(s.fecha).toLocaleDateString('es-AR'),
               )
             }
           />
@@ -388,7 +389,7 @@ function Detalle({
             </div>
             <div className="n">
               Concurso {control.nroConcurso} ·{' '}
-              {new Date(control.fecha).toLocaleDateString('es-AR')}. Tu mejor resultado fue{' '}
+              {fechaLocal(control.fecha).toLocaleDateString('es-AR')}. Tu mejor resultado fue{' '}
               {control.mejorAciertos}{' '}
               {control.mejorAciertos === 1 ? 'acierto' : 'aciertos'} en {control.mejorModalidad}.
             </div>
@@ -458,7 +459,7 @@ function Resultados({
               {juegos.find((j) => j.codigo === s.juegoCodigo)?.nombre ?? s.juegoCodigo} ·{' '}
               {s.nroConcurso}
             </div>
-            <div className="s">{new Date(s.fecha).toLocaleDateString('es-AR')}</div>
+            <div className="s">{fechaLocal(s.fecha).toLocaleDateString('es-AR')}</div>
           </div>
           <span
             className="dot"

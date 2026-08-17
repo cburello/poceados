@@ -13,6 +13,16 @@ export const COLOR_JUEGO: Record<string, string> = {
 export const pesos = (n: number) =>
   n.toLocaleString('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 2 });
 
+/**
+ * Parsea una fecha "YYYY-MM-DD" del backend como fecha local, no UTC.
+ * `new Date('2026-08-16')` se interpreta como medianoche UTC: en Argentina
+ * (UTC-3) eso muestra el día anterior. Acá se arman los componentes a mano.
+ */
+export function fechaLocal(iso: string): Date {
+  const [anio, mes, dia] = iso.split('-').map(Number);
+  return new Date(anio, mes - 1, dia);
+}
+
 const dosDigitos = (n: number) => String(n).padStart(2, '0');
 
 export function Bola({
