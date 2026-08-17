@@ -23,12 +23,14 @@ export async function ingestarJuego(prisma: PrismaClient, juegoCodigo: string) {
   }
   console.log(`  estado: ${c.estado} - ${c.detalle}`);
 
-  if (!c.sorteo) return;
+  // Tiramos error (en vez de volver en silencio) para que el scheduler
+  // reintente: "todavía no publicó" es justo el caso que los reintentos
+  // tienen que cubrir.
+  if (!c.sorteo) throw new Error(c.detalle);
   const s = c.sorteo;
 
   if (!s.nroConcurso) {
-    console.log('  no se pudo leer el número de concurso, no se guarda');
-    return;
+    throw new Error('no se pudo leer el número de concurso');
   }
 
   // Guardamos la lectura cruda siempre: sirve para auditar si algo no cierra.
