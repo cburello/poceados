@@ -131,7 +131,19 @@ app.post<{ Body: { juegoCodigo: string; html: string } }>(
   async (req, reply) => {
     const token = req.headers['x-ingesta-token'];
     if (!process.env.INGESTA_TOKEN || token !== process.env.INGESTA_TOKEN) {
-      return reply.code(401).send({ error: 'Token inválido' });
+      // TEMPORAL: diagnóstico para ver por qué no matchea, sin exponer el valor real.
+      return reply.code(401).send({
+        error: 'Token inválido',
+        diag: {
+          hayEnv: !!process.env.INGESTA_TOKEN,
+          largoEnv: process.env.INGESTA_TOKEN?.length ?? 0,
+          largoRecibido: typeof token === 'string' ? token.length : null,
+          tipoRecibido: typeof token,
+          ultimoCharEnvCode: process.env.INGESTA_TOKEN?.charCodeAt(
+            process.env.INGESTA_TOKEN.length - 1,
+          ),
+        },
+      });
     }
 
     const { juegoCodigo, html } = req.body;
