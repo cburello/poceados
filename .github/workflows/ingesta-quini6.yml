@@ -1,0 +1,35 @@
+name: Ingesta Quini 6
+
+# Lotería Santa Fe bloquea las conexiones desde Railway (ver README), así
+# que esta ingesta corre en los runners de GitHub Actions en su lugar.
+# Loto Plus se sigue ingesta solo, desde Railway.
+#
+# Quini 6 sortea miércoles y domingos 21:15 (hora Argentina, UTC-3). Los
+# horarios de acá están en UTC y son la hora del sorteo + 40 min, con
+# reintentos cada 15 min hasta las +85 min, igual que el scheduler de
+# Railway.
+on:
+  schedule:
+    - cron: '55 0 * * 4' # miércoles 21:55 ART
+    - cron: '10 1 * * 4' # miércoles 22:10 ART
+    - cron: '25 1 * * 4' # miércoles 22:25 ART
+    - cron: '40 1 * * 4' # miércoles 22:40 ART
+    - cron: '55 0 * * 1' # domingo 21:55 ART
+    - cron: '10 1 * * 1' # domingo 22:10 ART
+    - cron: '25 1 * * 1' # domingo 22:25 ART
+    - cron: '40 1 * * 1' # domingo 22:40 ART
+  workflow_dispatch: {}
+
+jobs:
+  ingesta:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run ingesta -- QUINI6
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
