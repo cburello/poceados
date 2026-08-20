@@ -9,7 +9,7 @@ import type { PrismaClient } from '@prisma/client';
 import { proveedorSantaFe } from '../proveedores/santafe.ts';
 import { proveedorLotba } from '../proveedores/lotba.ts';
 import { conciliar } from './conciliar.ts';
-import { huellaDe } from '../proveedores/tipos.ts';
+import { huellaDe, type SorteoCrudo } from '../proveedores/tipos.ts';
 
 const PROVEEDORES = [proveedorSantaFe, proveedorLotba];
 
@@ -27,8 +27,22 @@ export async function ingestarJuego(prisma: PrismaClient, juegoCodigo: string) {
   // reintente: "todavía no publicó" es justo el caso que los reintentos
   // tienen que cubrir.
   if (!c.sorteo) throw new Error(c.detalle);
-  const s = c.sorteo;
 
+  await guardarSorteo(prisma, juegoCodigo, c.sorteo, c.estado, 'SANTAFE_WEB');
+}
+
+/**
+ * Guarda un sorteo ya obtenido (por red o pasado a mano, ej. el bookmarklet
+ * de Ajustes cuando Lotería Santa Fe bloquea la conexión desde el backend).
+ * Mismo camino de guardado que usa ingestarJuego, para no duplicar lógica.
+ */
+export async function guardarSorteo(
+  prisma: PrismaClient,
+  juegoCodigo: string,
+  s: SorteoCrudo,
+  estado: string,
+  fuente: string,
+) {
   if (!s.nroConcurso) {
     throw new Error('no se pudo leer el número de concurso');
   }
@@ -38,7 +52,7 @@ export async function ingestarJuego(prisma: PrismaClient, juegoCodigo: string) {
     data: {
       juegoCodigo,
       nroConcurso: s.nroConcurso,
-      fuente: 'SANTAFE_WEB',
+      fuente,
       huella: huellaDe(s),
       payloadJson: JSON.stringify(s),
       ok: true,
@@ -53,12 +67,12 @@ export async function ingestarJuego(prisma: PrismaClient, juegoCodigo: string) {
       juegoCodigo,
       nroConcurso: s.nroConcurso,
       fecha: new Date(s.fecha),
-      estado: c.estado,
+      estado,
       verificadoEn: new Date(),
       urlExtracto: s.urlExtracto ?? null,
     },
     update: {
-      estado: c.estado,
+      estado,
       verificadoEn: new Date(),
       fecha: new Date(s.fecha),
       urlExtracto: s.urlExtracto ?? null,

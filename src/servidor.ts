@@ -5,6 +5,8 @@ import { PrismaClient } from '@prisma/client';
 import { JUEGOS, getJuego } from './config/juegos.ts';
 import { controlarJugada, validarJugada, type Jugada, type Sorteo } from './dominio/control.ts';
 import { iniciarProgramador } from './ingesta/programador.ts';
+import { guardarSorteo } from './ingesta/ingestar.ts';
+import { parsearExtracto } from './proveedores/santafe.ts';
 
 const prisma = new PrismaClient();
 const app = Fastify({ logger: { transport: { target: 'pino-pretty' } } });
@@ -115,6 +117,40 @@ app.post<{ Body: { jugada: Jugada; nroConcurso?: number } }>(
     if (!fila) return reply.code(404).send({ error: 'Todavía no hay sorteo para controlar' });
 
     return controlarJugada(jugada, aDominio(fila));
+  },
+);
+
+// --- Ingesta manual (bookmarklet) ------------------------------------------
+// Lotería Santa Fe bloquea las conexiones salientes desde Railway. Como
+// paliativo, el bookmarklet de Ajustes manda el HTML de la página ya
+// cargada en el celular (que nunca está bloqueado, es tráfico normal de
+// navegador) y acá lo procesamos con el mismo parser de siempre.
+
+app.post<{ Body: { juegoCodigo: string; html: string } }>(
+  '/ingesta/relay',
+  async (req, reply) => {
+    const token = req.headers['x-ingesta-token'];
+    if (!process.env.INGESTA_TOKEN || token !== process.env.INGESTA_TOKEN) {
+      return reply.code(401).send({ error: 'Token inválido' });
+    }
+
+    const { juegoCodigo, html } = req.body;
+    if (!juegoCodigo || !html) {
+      return reply.code(400).send({ error: 'Falta juegoCodigo o html' });
+    }
+
+    try {
+      const sorteo = parsearExtracto(html, juegoCodigo, 6);
+      await guardarSorteo(prisma, juegoCodigo, sorteo, 'PARCIAL', 'SANTAFE_WEB');
+      return {
+        ok: true,
+        nroConcurso: sorteo.nroConcurso,
+        fecha: sorteo.fecha,
+        modalidades: sorteo.resultados.map((r) => r.modalidadCodigo),
+      };
+    } catch (e) {
+      return reply.code(400).send({ error: (e as Error).message });
+    }
   },
 );
 

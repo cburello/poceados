@@ -538,6 +538,20 @@ function Ajustes({
     inp.click();
   }
 
+  const tokenIngesta = import.meta.env.VITE_INGESTA_TOKEN;
+  const apiIngesta = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
+
+  async function copiarBookmarklet() {
+    const codigo = `(function(){var u=${JSON.stringify(`${apiIngesta}/ingesta/relay`)},t=${JSON.stringify(tokenIngesta)};fetch(u,{method:'POST',headers:{'Content-Type':'application/json','x-ingesta-token':t},body:JSON.stringify({juegoCodigo:'QUINI6',html:document.documentElement.outerHTML})}).then(function(r){return r.json().then(function(d){return{s:r.status,d:d}})}).then(function(res){alert(res.s===200?'Listo: concurso '+res.d.nroConcurso+' ('+res.d.fecha+') guardado.':'Error: '+(res.d.error||res.s))}).catch(function(e){alert('Error de red: '+e.message)})})();`;
+    const bookmarklet = `javascript:${encodeURIComponent(codigo)}`;
+    try {
+      await navigator.clipboard.writeText(bookmarklet);
+      onAviso('Copiado. Pegalo como dirección de un favorito nuevo.');
+    } catch {
+      onAviso('No se pudo copiar. Probá desde el navegador del celular.');
+    }
+  }
+
   return (
     <div className="pad">
       <Encabezado>Mis datos</Encabezado>
@@ -560,6 +574,33 @@ function Ajustes({
         </div>
         <span className="chev">›</span>
       </button>
+
+      {tokenIngesta && (
+        <>
+          <Encabezado>Actualizar Quini 6 a mano</Encabezado>
+          <Nota tipo="aviso" titulo="Por qué existe esto">
+            Lotería Santa Fe bloquea las conexiones desde nuestro servidor, así que a veces Quini 6
+            no se actualiza solo. Desde tu celular sí se puede leer la página sin problema — este
+            accesito te manda lo que ya tenés abierto en el navegador para que la app lo procese.
+          </Nota>
+
+          <button className="row" onClick={copiarBookmarklet}>
+            <div>
+              <div className="t">Copiar accesito para el celular</div>
+              <div className="s">Lo pegás una vez en tus favoritos</div>
+            </div>
+            <span className="chev">›</span>
+          </button>
+
+          <Nota tipo="info" titulo="Cómo instalarlo (una sola vez)">
+            Agregá cualquier página a favoritos, después editá ese favorito y reemplazá su
+            dirección por lo que acabás de copiar. En Chrome (Android): favoritos → tres puntos del
+            favorito → Editar → pegar en "URL". En Safari (iPhone): favoritos → Editar → tocar el
+            favorito → pegar en el campo de la dirección. Después, para usarlo: abrí la página de
+            resultados de Quini 6 en tu navegador y tocá el favorito.
+          </Nota>
+        </>
+      )}
 
       <Encabezado>Juego responsable</Encabezado>
       <button
