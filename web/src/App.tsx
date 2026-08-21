@@ -540,15 +540,52 @@ function Ajustes({
 
   const tokenIngesta = import.meta.env.VITE_INGESTA_TOKEN;
   const apiIngesta = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
+  const [htmlPegado, setHtmlPegado] = useState('');
+  const [guardandoQuini, setGuardandoQuini] = useState(false);
 
   async function copiarBookmarklet() {
-    const codigo = `(function(){var u=${JSON.stringify(`${apiIngesta}/ingesta/relay`)},t=${JSON.stringify(tokenIngesta)};fetch(u,{method:'POST',headers:{'Content-Type':'application/json','x-ingesta-token':t},body:JSON.stringify({juegoCodigo:'QUINI6',html:document.documentElement.outerHTML})}).then(function(r){return r.json().then(function(d){return{s:r.status,d:d}})}).then(function(res){alert(res.s===200?'Listo: concurso '+res.d.nroConcurso+' ('+res.d.fecha+') guardado.':'Error: '+(res.d.error||res.s))}).catch(function(e){alert('Error de red: '+e.message)})})();`;
+    // El bookmarklet solo copia la página al portapapeles. No manda nada
+    // por su cuenta: eso se hace pegando acá abajo y tocando "Guardar",
+    // para que quede claro qué está pasando en cada paso.
+    const codigo =
+      `(function(){var h=document.documentElement.outerHTML;` +
+      `function ok(){alert('Copiado. Volvé a la app de Poceados, pegalo en Ajustes y tocá Guardar.')}` +
+      `function viejo(){var ta=document.createElement('textarea');ta.value=h;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);ok()}` +
+      `if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(h).then(ok).catch(viejo)}else{viejo()}` +
+      `})();`;
     const bookmarklet = `javascript:${encodeURIComponent(codigo)}`;
     try {
       await navigator.clipboard.writeText(bookmarklet);
       onAviso('Copiado. Pegalo como dirección de un favorito nuevo.');
     } catch {
       onAviso('No se pudo copiar. Probá desde el navegador del celular.');
+    }
+  }
+
+  async function guardarPegado() {
+    if (!htmlPegado.trim()) {
+      onAviso('Pegá el contenido de la página primero');
+      return;
+    }
+    setGuardandoQuini(true);
+    try {
+      const r = await fetch(`${apiIngesta}/ingesta/relay`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-ingesta-token': tokenIngesta ?? '' },
+        body: JSON.stringify({ juegoCodigo: 'QUINI6', html: htmlPegado }),
+      });
+      const d = await r.json();
+      if (r.ok) {
+        onAviso(`Listo: concurso ${d.nroConcurso} (${d.fecha}) guardado.`);
+        setHtmlPegado('');
+        onRecargar();
+      } else {
+        onAviso(`Error: ${d.error ?? r.status}`);
+      }
+    } catch (e) {
+      onAviso(`Error de red: ${(e as Error).message}`);
+    } finally {
+      setGuardandoQuini(false);
     }
   }
 
@@ -580,25 +617,42 @@ function Ajustes({
           <Encabezado>Actualizar Quini 6 a mano</Encabezado>
           <Nota tipo="aviso" titulo="Por qué existe esto">
             Lotería Santa Fe bloquea las conexiones desde nuestro servidor, así que a veces Quini 6
-            no se actualiza solo. Desde tu celular sí se puede leer la página sin problema — este
-            accesito te manda lo que ya tenés abierto en el navegador para que la app lo procese.
+            no se actualiza solo. Desde tu celular sí se puede leer la página sin problema. Son dos
+            pasos: 1) copiar la página con un accesito, 2) volver acá y pegarla.
+          </Nota>
+
+          <Nota tipo="info" titulo="Paso 1 (una sola vez): instalar el accesito">
+            Tocá "Copiar accesito" acá abajo. Después agregá cualquier página a favoritos de tu
+            navegador y editá ese favorito, reemplazando su dirección por lo que copiaste. En
+            Chrome (Android): favoritos → tres puntos del favorito → Editar → pegar en "URL". En
+            Safari (iPhone): favoritos → Editar → tocar el favorito → pegar en la dirección.
           </Nota>
 
           <button className="row" onClick={copiarBookmarklet}>
             <div>
-              <div className="t">Copiar accesito para el celular</div>
-              <div className="s">Lo pegás una vez en tus favoritos</div>
+              <div className="t">Copiar accesito</div>
+              <div className="s">Para instalarlo en tus favoritos</div>
             </div>
             <span className="chev">›</span>
           </button>
 
-          <Nota tipo="info" titulo="Cómo instalarlo (una sola vez)">
-            Agregá cualquier página a favoritos, después editá ese favorito y reemplazá su
-            dirección por lo que acabás de copiar. En Chrome (Android): favoritos → tres puntos del
-            favorito → Editar → pegar en "URL". En Safari (iPhone): favoritos → Editar → tocar el
-            favorito → pegar en el campo de la dirección. Después, para usarlo: abrí la página de
-            resultados de Quini 6 en tu navegador y tocá el favorito.
+          <Nota tipo="info" titulo="Paso 2: cada vez que quieras actualizar">
+            Abrí la página de resultados de Quini 6 en tu navegador (no en esta app) y tocá el
+            accesito de tus favoritos — copia la página, no manda nada todavía. Volvé acá, pegala
+            en el cuadro de abajo y tocá "Guardar".
           </Nota>
+
+          <textarea
+            className="pegar"
+            placeholder="Pegá acá lo que copiaste con el accesito"
+            value={htmlPegado}
+            onChange={(e) => setHtmlPegado(e.target.value)}
+          />
+          <div className="btnrow">
+            <button className="btn" onClick={guardarPegado} disabled={guardandoQuini}>
+              {guardandoQuini ? 'Guardando…' : 'Guardar'}
+            </button>
+          </div>
         </>
       )}
 

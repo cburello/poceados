@@ -162,6 +162,13 @@ body{
 .row .s{font-size:11px;color:var(--ink2);margin-top:2px}
 .row .chev{color:var(--ink3);font-size:14px}
 
+.pegar{
+  width:100%;min-height:110px;margin-top:6px;padding:12px 13px;box-sizing:border-box;
+  border:1px solid var(--rule);background:var(--card);color:var(--ink);
+  font-family:'Martian Mono',monospace;font-size:11px;line-height:1.4;resize:vertical;
+}
+.pegar::placeholder{color:var(--ink3);font-family:inherit}
+
 /* buttons */
 .btn{
   display:block;width:100%;padding:14px;background:var(--ink);color:var(--paper);
