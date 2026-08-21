@@ -17,6 +17,7 @@
     "test:watch": "node --test --watch --experimental-strip-types"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.120.0",
     "@fastify/cors": "^10.0.1",
     "@prisma/client": "^6.1.0",
     "cheerio": "^1.0.0",

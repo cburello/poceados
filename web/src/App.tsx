@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Juego } from '@dominio/config/juegos.ts';
 import { controlarJugada, type ControlJugada, type Sorteo } from '@dominio/dominio/control.ts';
+import type { SorteoCrudo } from '@dominio/proveedores/tipos.ts';
 import { almacen, type JugadaGuardada } from './datos/almacen.ts';
 import { api } from './datos/api.ts';
 import { NuevaJugada } from './pantallas/NuevaJugada.tsx';
@@ -540,44 +541,59 @@ function Ajustes({
 
   const tokenIngesta = import.meta.env.VITE_INGESTA_TOKEN;
   const apiIngesta = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
-  const [htmlPegado, setHtmlPegado] = useState('');
-  const [guardandoQuini, setGuardandoQuini] = useState(false);
+  const [subiendoFoto, setSubiendoFoto] = useState(false);
+  const [previa, setPrevia] = useState<SorteoCrudo | null>(null);
+  const [guardandoFoto, setGuardandoFoto] = useState(false);
 
-  async function copiarBookmarklet() {
-    // El bookmarklet solo copia la página al portapapeles. No manda nada
-    // por su cuenta: eso se hace pegando acá abajo y tocando "Guardar",
-    // para que quede claro qué está pasando en cada paso.
-    const codigo =
-      `(function(){var h=document.documentElement.outerHTML;` +
-      `function ok(){alert('Copiado. Volvé a la app de Poceados, pegalo en Ajustes y tocá Guardar.')}` +
-      `function viejo(){var ta=document.createElement('textarea');ta.value=h;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);ok()}` +
-      `if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(h).then(ok).catch(viejo)}else{viejo()}` +
-      `})();`;
-    const bookmarklet = `javascript:${encodeURIComponent(codigo)}`;
-    try {
-      await navigator.clipboard.writeText(bookmarklet);
-      onAviso('Copiado. Pegalo como dirección de un favorito nuevo.');
-    } catch {
-      onAviso('No se pudo copiar. Probá desde el navegador del celular.');
-    }
+  function elegirFoto() {
+    const inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = 'image/*';
+    inp.onchange = async () => {
+      const f = inp.files?.[0];
+      if (!f) return;
+      setSubiendoFoto(true);
+      setPrevia(null);
+      try {
+        const b64 = await new Promise<string>((resolve, reject) => {
+          const r = new FileReader();
+          r.onload = () => resolve((r.result as string).split(',')[1] ?? '');
+          r.onerror = () => reject(new Error('No se pudo leer el archivo'));
+          r.readAsDataURL(f);
+        });
+        const r = await fetch(`${apiIngesta}/ingesta/foto`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-ingesta-token': tokenIngesta ?? '' },
+          body: JSON.stringify({ juegoCodigo: 'QUINI6', imagenBase64: b64, mediaType: f.type }),
+        });
+        const d = await r.json();
+        if (r.ok) {
+          setPrevia(d.sorteo);
+        } else {
+          onAviso(`Error: ${d.error ?? r.status}`);
+        }
+      } catch (e) {
+        onAviso(`Error de red: ${(e as Error).message}`);
+      } finally {
+        setSubiendoFoto(false);
+      }
+    };
+    inp.click();
   }
 
-  async function guardarPegado() {
-    if (!htmlPegado.trim()) {
-      onAviso('Pegá el contenido de la página primero');
-      return;
-    }
-    setGuardandoQuini(true);
+  async function confirmarFoto() {
+    if (!previa) return;
+    setGuardandoFoto(true);
     try {
-      const r = await fetch(`${apiIngesta}/ingesta/relay`, {
+      const r = await fetch(`${apiIngesta}/ingesta/confirmar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-ingesta-token': tokenIngesta ?? '' },
-        body: JSON.stringify({ juegoCodigo: 'QUINI6', html: htmlPegado }),
+        body: JSON.stringify({ juegoCodigo: 'QUINI6', sorteo: previa }),
       });
       const d = await r.json();
       if (r.ok) {
         onAviso(`Listo: concurso ${d.nroConcurso} (${d.fecha}) guardado.`);
-        setHtmlPegado('');
+        setPrevia(null);
         onRecargar();
       } else {
         onAviso(`Error: ${d.error ?? r.status}`);
@@ -585,7 +601,7 @@ function Ajustes({
     } catch (e) {
       onAviso(`Error de red: ${(e as Error).message}`);
     } finally {
-      setGuardandoQuini(false);
+      setGuardandoFoto(false);
     }
   }
 
@@ -614,45 +630,60 @@ function Ajustes({
 
       {tokenIngesta && (
         <>
-          <Encabezado>Actualizar Quini 6 a mano</Encabezado>
+          <Encabezado>Actualizar Quini 6 con una foto</Encabezado>
           <Nota tipo="aviso" titulo="Por qué existe esto">
             Lotería Santa Fe bloquea las conexiones desde nuestro servidor, así que a veces Quini 6
-            no se actualiza solo. Desde tu celular sí se puede leer la página sin problema. Son dos
-            pasos: 1) copiar la página con un accesito, 2) volver acá y pegarla.
+            no se actualiza solo. Sacale una captura a la página de resultados desde tu celular y
+            subila acá: una IA la lee y te muestra lo que entendió antes de guardar nada.
           </Nota>
 
-          <Nota tipo="info" titulo="Paso 1 (una sola vez): instalar el accesito">
-            Tocá "Copiar accesito" acá abajo. Después agregá cualquier página a favoritos de tu
-            navegador y editá ese favorito, reemplazando su dirección por lo que copiaste. En
-            Chrome (Android): favoritos → tres puntos del favorito → Editar → pegar en "URL". En
-            Safari (iPhone): favoritos → Editar → tocar el favorito → pegar en la dirección.
-          </Nota>
-
-          <button className="row" onClick={copiarBookmarklet}>
+          <button className="row" onClick={elegirFoto} disabled={subiendoFoto}>
             <div>
-              <div className="t">Copiar accesito</div>
-              <div className="s">Para instalarlo en tus favoritos</div>
+              <div className="t">
+                {subiendoFoto ? 'Leyendo la captura…' : 'Subir captura de Quini 6'}
+              </div>
+              <div className="s">Foto o captura de pantalla</div>
             </div>
             <span className="chev">›</span>
           </button>
 
-          <Nota tipo="info" titulo="Paso 2: cada vez que quieras actualizar">
-            Abrí la página de resultados de Quini 6 en tu navegador (no en esta app) y tocá el
-            accesito de tus favoritos — copia la página, no manda nada todavía. Volvé acá, pegala
-            en el cuadro de abajo y tocá "Guardar".
-          </Nota>
-
-          <textarea
-            className="pegar"
-            placeholder="Pegá acá lo que copiaste con el accesito"
-            value={htmlPegado}
-            onChange={(e) => setHtmlPegado(e.target.value)}
-          />
-          <div className="btnrow">
-            <button className="btn" onClick={guardarPegado} disabled={guardandoQuini}>
-              {guardandoQuini ? 'Guardando…' : 'Guardar'}
-            </button>
-          </div>
+          {previa && (
+            <>
+              <Nota tipo="info" titulo={`Concurso ${previa.nroConcurso} · ${previa.fecha}`}>
+                Revisá que coincida con la captura antes de guardar.
+              </Nota>
+              {previa.resultados.map((r) => (
+                <div key={r.modalidadCodigo} className="ext">
+                  <h4>{r.modalidadCodigo.replace(/_/g, ' ')}</h4>
+                  <div className="nums">
+                    <Bolas numeros={r.numeros} />
+                  </div>
+                  <table>
+                    <tbody>
+                      {r.escalones.map((e, i) => (
+                        <tr key={i}>
+                          <td className="a">{e.etiqueta}</td>
+                          <td>
+                            {e.vacante
+                              ? 'vacante'
+                              : `${e.ganadores.toLocaleString('es-AR')} · ${pesos(e.premioUnitario)}`}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
+              <div className="btnrow">
+                <button className="btn ghost" onClick={() => setPrevia(null)}>
+                  Descartar
+                </button>
+                <button className="btn" onClick={confirmarFoto} disabled={guardandoFoto}>
+                  {guardandoFoto ? 'Guardando…' : 'Confirmar y guardar'}
+                </button>
+              </div>
+            </>
+          )}
         </>
       )}
 

@@ -6,10 +6,14 @@ import { JUEGOS, getJuego } from './config/juegos.ts';
 import { controlarJugada, validarJugada, type Jugada, type Sorteo } from './dominio/control.ts';
 import { iniciarProgramador } from './ingesta/programador.ts';
 import { guardarSorteo } from './ingesta/ingestar.ts';
-import { parsearExtracto } from './proveedores/santafe.ts';
+import { leerCapturaQuini6 } from './ingesta/leerCaptura.ts';
+import type { SorteoCrudo } from './proveedores/tipos.ts';
 
 const prisma = new PrismaClient();
-const app = Fastify({ logger: { transport: { target: 'pino-pretty' } } });
+const app = Fastify({
+  logger: { transport: { target: 'pino-pretty' } },
+  bodyLimit: 15 * 1024 * 1024, // una captura de celular en base64 puede pesar varios MB
+});
 
 await app.register(cors, { origin: true });
 
@@ -120,34 +124,53 @@ app.post<{ Body: { jugada: Jugada; nroConcurso?: number } }>(
   },
 );
 
-// --- Ingesta manual (bookmarklet) ------------------------------------------
+// --- Ingesta manual (captura de pantalla) ----------------------------------
 // Lotería Santa Fe bloquea las conexiones salientes desde Railway. Como
-// paliativo, el bookmarklet de Ajustes manda el HTML de la página ya
-// cargada en el celular (que nunca está bloqueado, es tráfico normal de
-// navegador) y acá lo procesamos con el mismo parser de siempre.
+// paliativo, el usuario saca una captura de la página desde el celular
+// (nunca bloqueado) y una IA con visión (Haiku) la lee del lado del
+// servidor. No se guarda nada hasta que el usuario confirma lo que se leyó.
 
-app.post<{ Body: { juegoCodigo: string; html: string } }>(
-  '/ingesta/relay',
+function chequearToken(req: { headers: Record<string, unknown> }, reply: any): boolean {
+  const token = req.headers['x-ingesta-token'];
+  if (!process.env.INGESTA_TOKEN || token !== process.env.INGESTA_TOKEN) {
+    reply.code(401).send({ error: 'Token inválido' });
+    return false;
+  }
+  return true;
+}
+
+app.post<{ Body: { juegoCodigo: string; imagenBase64: string; mediaType: string } }>(
+  '/ingesta/foto',
   async (req, reply) => {
-    const token = req.headers['x-ingesta-token'];
-    if (!process.env.INGESTA_TOKEN || token !== process.env.INGESTA_TOKEN) {
-      return reply.code(401).send({ error: 'Token inválido' });
-    }
+    if (!chequearToken(req, reply)) return;
 
-    const { juegoCodigo, html } = req.body;
-    if (!juegoCodigo || !html) {
-      return reply.code(400).send({ error: 'Falta juegoCodigo o html' });
+    const { juegoCodigo, imagenBase64, mediaType } = req.body;
+    if (!juegoCodigo || !imagenBase64 || !mediaType) {
+      return reply.code(400).send({ error: 'Falta juegoCodigo, imagenBase64 o mediaType' });
     }
 
     try {
-      const sorteo = parsearExtracto(html, juegoCodigo, 6);
-      await guardarSorteo(prisma, juegoCodigo, sorteo, 'PARCIAL', 'SANTAFE_WEB');
-      return {
-        ok: true,
-        nroConcurso: sorteo.nroConcurso,
-        fecha: sorteo.fecha,
-        modalidades: sorteo.resultados.map((r) => r.modalidadCodigo),
-      };
+      const sorteo = await leerCapturaQuini6(imagenBase64, mediaType);
+      return { ok: true, sorteo };
+    } catch (e) {
+      return reply.code(400).send({ error: (e as Error).message });
+    }
+  },
+);
+
+app.post<{ Body: { juegoCodigo: string; sorteo: SorteoCrudo } }>(
+  '/ingesta/confirmar',
+  async (req, reply) => {
+    if (!chequearToken(req, reply)) return;
+
+    const { juegoCodigo, sorteo } = req.body;
+    if (!juegoCodigo || !sorteo) {
+      return reply.code(400).send({ error: 'Falta juegoCodigo o sorteo' });
+    }
+
+    try {
+      await guardarSorteo(prisma, juegoCodigo, sorteo, 'PARCIAL', 'SANTAFE_FOTO');
+      return { ok: true, nroConcurso: sorteo.nroConcurso, fecha: sorteo.fecha };
     } catch (e) {
       return reply.code(400).send({ error: (e as Error).message });
     }
