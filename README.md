@@ -27,6 +27,24 @@ npm run dev       # app en :5173
 
 ---
 
+## Variables de entorno
+
+**Backend** (`.env` local / Variables en Railway):
+- `DATABASE_URL`, `DIRECT_URL` — Postgres en Supabase (pooler y directa).
+- `INGESTA_TOKEN` — protege `POST /ingesta/foto` y `POST /ingesta/confirmar`.
+- `ANTHROPIC_API_KEY` — para que `leerCaptura.ts` pueda llamar a Claude.
+
+**Frontend** (Environment Variables en Vercel, prefijo `VITE_` obligatorio):
+- `VITE_API_URL` — URL del backend en Railway.
+- `VITE_INGESTA_TOKEN` — mismo valor que `INGESTA_TOKEN`. Sin esta variable, la
+  seccion de Ajustes para subir capturas de Quini 6 no aparece.
+
+En Railway y Vercel, guardar una variable **no alcanza**: hay que aplicar el deploy
+pendiente (en Railway, el boton "Deploy" que aparece arriba a la izquierda con los
+cambios en cola).
+
+---
+
 ## Estado actual
 
 | Juego | Config | Ingesta | Fuente |
@@ -109,6 +127,34 @@ Al agregar una fuente nueva, capturar el fixture primero.
 
 ---
 
+## Loteria Santa Fe bloquea las conexiones desde la nube
+
+`apps.loteriasantafe.gov.ar:8443` no responde si el pedido sale desde un datacenter:
+se probo desde Railway (regiones EU West y US East) y desde los runners de GitHub
+Actions, y las tres veces `ConnectTimeoutError` / `fetch failed`, tanto en el puerto
+8443 como en el 443 del mismo host. No es un problema de puerto ni de codigo: el sitio
+filtra por origen de la conexion. Desde una red residencial (notebook, celular) siempre
+respondio bien.
+
+**Loto Plus sigue andando solo** porque LOTBA (`loto.loteriadelaciudad.gob.ar`) no tiene
+ese bloqueo.
+
+**Para Quini 6, la salida fue mover la ingesta al celular.** En Ajustes hay un boton para
+subir una captura de pantalla de la pagina de resultados. El backend (`src/ingesta/leerCaptura.ts`)
+se la manda a Claude (Haiku, barato, alcanza de sobra para leer una tabla de numeros) con
+instrucciones para devolver el mismo formato `SorteoCrudo` que usan los demas proveedores.
+**No se guarda nada solo:** `POST /ingesta/foto` devuelve la lectura para que el usuario la
+revise contra la captura, y recien `POST /ingesta/confirmar` la guarda — mismo criterio que
+`conciliar.ts` de no publicar un resultado sin confirmar. Los dos endpoints piden el header
+`x-ingesta-token` (variable `INGESTA_TOKEN`) para que no cualquiera pueda mandar datos falsos.
+
+Se probaron y descartaron dos alternativas antes de llegar a esta:
+- Un *bookmarklet* que copiaba el HTML de la pagina y lo pegaba en la app (`POST /ingesta/relay`,
+  ya no existe): funcionaba, pero instalarlo y usarlo resulto demasiado confuso.
+- Un workflow de GitHub Actions con el mismo cron que Railway: mismo bloqueo, se borro.
+
+---
+
 ## Proximos pasos, en orden
 
 1. ~~**Migrar SQLite a Postgres (Supabase).**~~ Hecho. `numeros Int[]` nativo,
@@ -123,7 +169,9 @@ Al agregar una fuente nueva, capturar el fixture primero.
    usa esa variable en produccion y el proxy `/api` solo en desarrollo).
 4. **Segundo proveedor para conciliar.** El mas facil: el XML que LOTBA publica junto
    al PDF, en `archivos.xml` del mismo endpoint. Con eso Loto Plus llega a `CONFIRMADO`.
-5. **Boton "actualizar resultados"** en Ajustes, para forzar la ingesta desde la app.
+5. ~~**Boton "actualizar resultados" en Ajustes.**~~ Hecho, pero no como se penso originalmente:
+   Railway no puede llegar a Santa Fe (ver seccion de arriba), asi que el boton sube una
+   captura de pantalla en vez de forzar un fetch del lado del servidor.
 6. Juegos que faltan: Brinco y Poceada Federal salen del mismo servidor de Santa Fe;
    Loto 5 Plus tiene su propio subdominio en LOTBA, probablemente con el mismo endpoint.
 
