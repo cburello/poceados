@@ -139,9 +139,11 @@ app.post<{ Body: { juegoCodigo: string; html: string } }>(
           largoEnv: process.env.INGESTA_TOKEN?.length ?? 0,
           largoRecibido: typeof token === 'string' ? token.length : null,
           tipoRecibido: typeof token,
-          ultimoCharEnvCode: process.env.INGESTA_TOKEN?.charCodeAt(
-            process.env.INGESTA_TOKEN.length - 1,
+          totalVarsEnv: Object.keys(process.env).length,
+          clavesParecidas: Object.keys(process.env).filter((k) =>
+            k.toUpperCase().includes('INGESTA'),
           ),
+          tieneDatabaseUrl: !!process.env.DATABASE_URL,
         },
       });
     }
